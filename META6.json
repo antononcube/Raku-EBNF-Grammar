@@ -1,0 +1,30 @@
+{
+  "name": "EBNF::Grammar",
+  "description": "EBNF grammar and interpreters.",
+  "version": "0.1.0",
+  "perl": "6.d",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "zef:antononcube",
+  "depends": [],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "EBNF::Grammar": "lib/EBNF/Grammar.rakumod",
+    "EBNF::Grammarish": "lib/EBNF/Grammarish.rakumod",
+    "EBNF::Actions::Raku::FunctionalParsers": "lib/EBNF/Actions/Raku/FunctionalParsers.rakumod",
+    "EBNF::Actions::Raku::Grammar": "lib/EBNF/Actions/Raku/Grammar.rakumod"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "tags": [
+    "BNF",
+    "EBNF",
+    "grammar",
+    "interpreter",
+    "parser"
+  ],
+  "api": "1",
+  "source-url": "https://github.com/antononcube/Raku-EBNF-Grammar.git"
+}
