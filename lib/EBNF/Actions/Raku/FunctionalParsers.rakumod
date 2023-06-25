@@ -2,7 +2,7 @@ use v6.d;
 
 class EBNF::Actions::Raku::FunctionalParsers {
 
-    has $.name is rw = 'MyFP';
+    has $.name is rw = 'MyEBNFClass';
     has Str $.prefix is rw  = 'p';
     has Str $.start is rw = 'top';
     has &.modifier is rw = {$_.uc};
@@ -17,7 +17,7 @@ class EBNF::Actions::Raku::FunctionalParsers {
     method ebnf($/) {
         my $res = "class {self.name} \{\n\t";
         $res ~= $/.values>>.made.join("\n\t");
-        $res ~= "\n\thas \&.parser is rw = -> @x \{ self.{ self.top-rule-name}(@x) \};";
+        $res ~= "\n\thas \&.parser is rw = -> @x \{ self.{self.top-rule-name}(@x) \};";
         $res ~= "\n}";
         make $res;
     }
@@ -37,10 +37,11 @@ class EBNF::Actions::Raku::FunctionalParsers {
     }
 
     method factor($/) {
-        if $<modifier> {
-            make "[{ $<term>.made }]{ $<modifier>.Str }";
-        } else {
-            make $<term>.made;
+        given $<quantifier> {
+            when '?' { make "option({ $<term>.made })"; }
+            when '+' { make "many1({ $<term>.made })"; }
+            when '*' { make "many({ $<term>.made })"; }
+            default { make $<term>.made; }
         }
     }
 

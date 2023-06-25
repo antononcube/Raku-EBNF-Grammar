@@ -28,8 +28,8 @@ class EBNF::Actions::Raku::Grammar {
     }
 
     method factor($/) {
-        if $<modifier> {
-            make "[{ $<term>.made }]{ $<modifier>.Str }";
+        if $<quantifier> {
+            make "[{ $<term>.made }]{ $<quantifier>.Str }";
         } else {
             make $<term>.made;
         }

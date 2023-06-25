@@ -34,10 +34,11 @@ class EBNF::Actions::WL::FunctionalParsers {
     }
 
     method factor($/) {
-        if $<modifier> {
-            make "[{ $<term>.made }]{ $<modifier>.Str }";
-        } else {
-            make $<term>.made;
+        given $<quantifier> {
+            when '?' { make "ParseOption[{ $<term>.made }]"; }
+            when '+' { make "ParseMany1'{ $<term>.made }]"; }
+            when '*' { make "ParseMany[{ $<term>.made }]"; }
+            default { make $<term>.made; }
         }
     }
 

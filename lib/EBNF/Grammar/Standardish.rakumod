@@ -14,8 +14,8 @@ role EBNF::Grammar::Standardish {
     regex option { '[' <.WS> <rhs> <.WS> ']' }
     regex repetition { '{' <.WS> <rhs> <.WS> '}' }
     regex term { <parens> | <option> | <repetition> | <terminal> | <non-terminal> }
-    token modifier { '?' | '*' | '+' }
-    regex factor { <term> <.WS> <modifier> | <term> <.WS> }
+    token quantifier { '?' | '*' | '+' }
+    regex factor { <term> <.WS> <quantifier> | <term> <.WS> }
     token seq-sep { ',' }
     regex sequence { <.WS> <factor>+ % [ <.WS> <.seq-sep> <.WS> ] <.WS> }
     token alt-sep { '|' }
