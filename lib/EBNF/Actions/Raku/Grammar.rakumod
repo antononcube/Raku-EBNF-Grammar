@@ -26,7 +26,11 @@ class EBNF::Actions::Raku::Grammar {
     }
 
     method pFACTOR($/) {
-        make $<pTERM>>>.made;
+        if $<pMODIFIER> {
+            make "[{ $<pTERM>.made }]{ $<pMODIFIER>.Str }";
+        } else {
+            make $<pTERM>.made;
+        }
     }
 
     method pTERM($/) {
