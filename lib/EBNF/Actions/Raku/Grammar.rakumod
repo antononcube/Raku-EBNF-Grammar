@@ -33,12 +33,26 @@ class EBNF::Actions::Raku::Grammar {
         make $/.values[0].made;
     }
 
+    method pPARENS($/) {
+        make $/.values[0].made;
+    }
+
+    method pOPTION($/) {
+        my $res = $/.values[0].made;
+        make $res.contains(/\s/) ?? "($res)?" !! "$res?";
+    }
+
+    method pREPETITION($/) {
+        my $res = $/.values[0].made;
+        make $res.contains(/\s/) ?? "($res)*" !! "$res*";
+    }
+
     method pRHS($/) {
         make $/.values[0].made;
     }
 
     method pLHS($/) {
-        make $/.values[0].made;
+        make $/.values[0].made.subst(/^ '<'/, '').subst(/'>' $/, '');
     }
 
     method pIDENTIFIER($/) {
