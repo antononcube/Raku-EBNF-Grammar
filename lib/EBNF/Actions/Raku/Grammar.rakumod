@@ -2,12 +2,14 @@ use v6.d;
 
 class EBNF::Actions::Raku::Grammar {
 
+    has $.name is rw = 'MyEBNFGrammar';
+
     method TOP($/) {
         make $/.values[0].made;
     }
 
     method pGRAMMAR($/) {
-        my $res = "grammar MyNewGrammar \{\n\t";
+        my $res = "grammar {self.name} \{\n\t";
         $res ~= $/.values>>.made.join("\n\t");
         $res ~= "\n}";
         make $res;
@@ -43,12 +45,12 @@ class EBNF::Actions::Raku::Grammar {
 
     method pOPTION($/) {
         my $res = $/.values[0].made;
-        make $res.contains(/\s/) ?? "($res)?" !! "$res?";
+        make $res.contains(/\s/) ?? "[$res]?" !! "$res?";
     }
 
     method pREPETITION($/) {
         my $res = $/.values[0].made;
-        make $res.contains(/\s/) ?? "($res)*" !! "$res*";
+        make $res.contains(/\s/) ?? "[$res]*" !! "$res*";
     }
 
     method pRHS($/) {

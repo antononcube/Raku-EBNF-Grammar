@@ -1,6 +1,6 @@
 use v6.d;
 
-role EBNF::Grammarish {
+role EBNF::Grammar::Standardish {
     regex pLETTER { <:Ll> | <:Lu> }
     regex pDIGIT { \d }
     regex pSYMBOL { "[" | "]" | '{' | '}' | '(' | ')' | '<' | '>' | '\'' | '"' | '=' | '|' | '.' | ',' | ';' | '-' | '+' | '*' | '?' | "\n" | "\t" | "\r" | "\f" | "\b" }

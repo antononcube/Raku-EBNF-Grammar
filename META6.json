@@ -12,7 +12,7 @@
   "test-depends": [],
   "provides": {
     "EBNF::Grammar": "lib/EBNF/Grammar.rakumod",
-    "EBNF::Grammarish": "lib/EBNF/Grammarish.rakumod",
+    "EBNF::Grammar::Standardish": "lib/EBNF/Grammar/Standardish.rakumod",
     "EBNF::Actions::Raku::FunctionalParsers": "lib/EBNF/Actions/Raku/FunctionalParsers.rakumod",
     "EBNF::Actions::Raku::Grammar": "lib/EBNF/Actions/Raku/Grammar.rakumod"
   },

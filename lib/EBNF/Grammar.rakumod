@@ -1,10 +1,10 @@
 use v6.d;
 
-use EBNF::Grammarish;
+use EBNF::Grammar::Standardish;
 use EBNF::Actions::Raku::Grammar;
 
 grammar EBNF::Grammar
-        does EBNF::Grammarish {
+        does EBNF::Grammar::Standardish {
     regex TOP { <pGRAMMAR> }
 }
 
@@ -19,6 +19,28 @@ our sub ebnf-parse(Str:D $command, Str:D :$rule = 'TOP') is export {
 
 our sub ebnf-interpret(Str:D $command,
                        Str:D:$rule = 'TOP',
-                       :$actions = EBNF::Actions::Raku::Grammar.new) is export {
-    return EBNF::Grammar.parse($command, :$rule, :$actions).made;
+                       :$actions is copy = Whatever,
+                       :$name is copy = Whatever,
+                       Bool :$eval = False) is export {
+
+
+    if $name.isa(Whatever) {
+        $name = 'MyEBNFGrammar';
+    }
+
+    die 'The argument $name is expected to be a string or Whatever'
+    unless $name ~~ Str;
+
+    if $actions.isa(Whatever) {
+        $actions = EBNF::Actions::Raku::Grammar.new(:$name);
+    }
+
+    my $gr = EBNF::Grammar.parse($command, :$rule, :$actions).made;
+
+    if $eval {
+        use MONKEY-SEE-NO-EVAL;
+        return EVAL($gr);
+    }
+
+    return $gr;
 }
