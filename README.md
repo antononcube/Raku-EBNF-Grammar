@@ -53,7 +53,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687717248_7069435 {
+# grammar EBNF_1687719744_8426476 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -133,18 +133,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# We hate R
-# We 🤮 Python
-# I hate WL
-# I ♥️ Perl
-# We 🤮 Python
-# We love Python
-# I 🤮 Julia
-# We ♥️ Julia
+# We ♥️ Perl
+# We 🤮 WL
 # I hate Julia
-# I really love WL
-# We ♥️ WL
-# I love WL
+# We hate Julia
+# I really love R
+# I love Julia
+# I really love Python
+# I 🤮 Julia
+# I love Julia
+# I ♥️ WL
+# We hate Julia
+# We 🤮 R
 ```
 
 ------
