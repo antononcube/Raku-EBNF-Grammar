@@ -40,7 +40,7 @@ our sub ebnf-interpret(Str:D $command,
 
 
     if $name.isa(Whatever) {
-        $name = 'EBNF-' ~ DateTime.now.Instant.Num.subst('.', '-');
+        $name = 'EBNF_' ~ DateTime.now.Instant.Num.subst('.', '_');
     }
 
     die 'The argument $name is expected to be a string or Whatever'
