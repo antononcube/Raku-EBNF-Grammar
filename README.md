@@ -53,7 +53,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687709131_739545 {
+# grammar EBNF_1687713587_3835082 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -128,11 +128,11 @@ ebnf-parse --help
     - [ ] MAYBE Python
     - [ ] TODO Raku
         - [X] DONE Grammar
-        - [ ] TODO FunctionalParsers
+        - [X] DONE FunctionalParsers
         - [ ] TODO MermaidJS
         - [ ] Other EBNF styles
     - [ ] TODO WL
-        - [ ] TODO FunctionalParsers, [AAp1, AAp2]
+        - [X] DONE FunctionalParsers, [AAp1, AAp2]
         - [ ] TODO GrammarRules
 - [X] DONE CLI
 

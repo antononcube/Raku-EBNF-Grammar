@@ -95,11 +95,11 @@ ebnf-parse --help
     - [ ] MAYBE Python
     - [ ] TODO Raku
         - [X] DONE Grammar
-        - [ ] TODO FunctionalParsers
+        - [X] DONE FunctionalParsers
         - [ ] TODO MermaidJS
         - [ ] Other EBNF styles
     - [ ] TODO WL
-        - [ ] TODO FunctionalParsers, [AAp1, AAp2]
+        - [X] DONE FunctionalParsers, [AAp1, AAp2]
         - [ ] TODO GrammarRules
 - [X] DONE CLI
 
