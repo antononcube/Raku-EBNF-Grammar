@@ -23,13 +23,21 @@ grammar EBNF::Grammar::Relaxed is export
 };
 
 #-----------------------------------------------------------
-our sub ebnf-subparse(Str:D $command, Str:D :$rule = 'TOP') is export {
-    EBNF::Grammar.subparse($command, :$rule);
+our sub ebnf-subparse(Str:D $command, Str:D :$rule = 'TOP', Bool :$relaxed) is export {
+    return do if $relaxed {
+        EBNF::Grammar::Relaxed.subparse($command, :$rule);
+    } else {
+        EBNF::Grammar.subparse($command, :$rule);
+    }
 }
 
 #-----------------------------------------------------------
-our sub ebnf-parse(Str:D $command, Str:D :$rule = 'TOP') is export {
-    EBNF::Grammar.parse($command, :$rule);
+our sub ebnf-parse(Str:D $command, Str:D :$rule = 'TOP', Bool :$relaxed) is export {
+    return do if $relaxed {
+        EBNF::Grammar::Relaxed.parse($command, :$rule);
+    } else {
+        EBNF::Grammar.parse($command, :$rule);
+    }
 }
 
 #-----------------------------------------------------------
