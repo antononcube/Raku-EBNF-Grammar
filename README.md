@@ -53,7 +53,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687713587_3835082 {
+# grammar EBNF_1687717248_7069435 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -83,6 +83,68 @@ my $gr = ebnf-interpret($ebnf):eval;
 #   digit => ｢0｣
 #   digit => ｢9｣
 #   digit => ｢0｣
+```
+
+------
+
+### Random sentence generation
+
+Random sentences of grammars given in EBNF can be generated with additional help of the package 
+["Grammar::TokenProcessing"](https://github.com/antononcube/Raku-Grammar-TokenProcessing), [AAp2].
+
+Here is an EBNF grammar:
+
+```perl6
+my $ebnfCode = q:to/END/;
+<statement> = <who> , <verb> , <lang> ;
+<who> = 'I' | 'We' ;
+<verb> = [ 'really' ] , ( 'love' | 'hate' | { '♥️' } | '🤮' );
+<lang> = 'Julia' | 'Perl' | 'Python' | 'R' | 'WL' ; 
+END
+```
+```
+# <statement> = <who> , <verb> , <lang> ;
+# <who> = 'I' | 'We' ;
+# <verb> = [ 'really' ] , ( 'love' | 'hate' | { '♥️' } | '🤮' );
+# <lang> = 'Julia' | 'Perl' | 'Python' | 'R' | 'WL' ;
+```
+
+Here is the corresponding Raku grammar:
+
+```perl6, result=asis, output-prompt=NONE, output-lang=perl6
+ebnf-interpret($ebnfCode, name=>'LoveHateProgLang');
+```
+```perl6
+grammar LoveHateProgLang {
+	regex statement { <who> <verb> <lang> }
+	regex who { 'I' | 'We' }
+	regex verb { 'really'? 'love' | 'hate' | '♥️'* | '🤮' }
+	regex lang { 'Julia' | 'Perl' | 'Python' | 'R' | 'WL' }
+}
+```
+
+Here we generate random sentences:
+
+```perl6
+use Grammar::TokenProcessing;
+
+my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
+
+.say for random-sentence-generation($gr, '<statement>') xx 12;
+```
+```
+# We hate R
+# We 🤮 Python
+# I hate WL
+# I ♥️ Perl
+# We 🤮 Python
+# We love Python
+# I 🤮 Julia
+# We ♥️ Julia
+# I hate Julia
+# I really love WL
+# We ♥️ WL
+# I love WL
 ```
 
 ------
@@ -119,6 +181,15 @@ ebnf-parse --help
 
 ## TODO
 
+- [ ] TODO Parsing of EBNF
+    - [ ] TODO Sequence-pick-left, `<&`
+    - [ ] TODO Sequence-pick-right, `&>` 
+    - [ ] TODO "Named" tokens
+        - [ ] `'_?StringQ'` or `'_String'`
+        - [ ] `'_WordString'`, `'_LetterString'`, and `'_IdentifierString'`
+        - [ ] `'_?NumberQ'` and `'_?NumericQ'`
+        - [ ] `'_Integer'`
+        - [ ] `'Range[*from*, *to*]'`
 - [ ] TODO Interpreters of EBNF
     - [ ] TODO Java
         - [ ] TODO ["funcj.parser"](https://github.com/typemeta/funcj/tree/master/parser)

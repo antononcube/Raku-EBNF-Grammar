@@ -63,6 +63,40 @@ my $gr = ebnf-interpret($ebnf):eval;
 
 ------
 
+### Random sentence generation
+
+Random sentences of grammars given in EBNF can be generated with additional help of the package 
+["Grammar::TokenProcessing"](https://github.com/antononcube/Raku-Grammar-TokenProcessing), [AAp2].
+
+Here is an EBNF grammar:
+
+```perl6
+my $ebnfCode = q:to/END/;
+<statement> = <who> , <verb> , <lang> ;
+<who> = 'I' | 'We' ;
+<verb> = [ 'really' ] , ( 'love' | 'hate' | { '♥️' } | '🤮' );
+<lang> = 'Julia' | 'Perl' | 'Python' | 'R' | 'WL' ; 
+END
+```
+
+Here is the corresponding Raku grammar:
+
+```perl6, result=asis, output-prompt=NONE, output-lang=perl6
+ebnf-interpret($ebnfCode, name=>'LoveHateProgLang');
+```
+
+Here we generate random sentences:
+
+```perl6
+use Grammar::TokenProcessing;
+
+my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
+
+.say for random-sentence-generation($gr, '<statement>') xx 12;
+```
+
+------
+
 ## CLI
 
 The package provides a Command Line Interface (CLI) script for parsing EBNF. Here is its usage message:
@@ -86,6 +120,15 @@ ebnf-parse --help
 
 ## TODO
 
+- [ ] TODO Parsing of EBNF
+    - [ ] TODO Sequence-pick-left, `<&`
+    - [ ] TODO Sequence-pick-right, `&>` 
+    - [ ] TODO "Named" tokens
+        - [ ] `'_?StringQ'` or `'_String'`
+        - [ ] `'_WordString'`, `'_LetterString'`, and `'_IdentifierString'`
+        - [ ] `'_?NumberQ'` and `'_?NumericQ'`
+        - [ ] `'_Integer'`
+        - [ ] `'Range[*from*, *to*]'`
 - [ ] TODO Interpreters of EBNF
     - [ ] TODO Java
         - [ ] TODO ["funcj.parser"](https://github.com/typemeta/funcj/tree/master/parser)
