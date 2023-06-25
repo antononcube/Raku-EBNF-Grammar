@@ -3,6 +3,7 @@ use v6.d;
 use EBNF::Grammar::Standardish;
 use EBNF::Actions::Raku::Grammar;
 use EBNF::Actions::Raku::FunctionalParsers;
+use EBNF::Actions::WL::FunctionalParsers;
 
 #-----------------------------------------------------------
 grammar EBNF::Grammar
