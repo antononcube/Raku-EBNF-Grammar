@@ -52,13 +52,6 @@ END
 
 ebnf-interpret($ebnf);
 ```
-```
-# grammar EBNF_1687709131_739545 {
-# 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
-# 	regex integer { <digit> <digit>* }
-# 	regex TOP { <integer> }
-# }
-```
 
 Here the obtained Raku grammar is evaluated and used to do a few parsings:  
 
@@ -66,23 +59,6 @@ Here the obtained Raku grammar is evaluated and used to do a few parsings:
 my $gr = ebnf-interpret($ebnf):eval;
 
 .say for <212 89 9090>.map({ $gr.parse($_) });
-```
-```
-# ｢212｣
-#  integer => ｢212｣
-#   digit => ｢2｣
-#   digit => ｢1｣
-#   digit => ｢2｣
-# ｢89｣
-#  integer => ｢89｣
-#   digit => ｢8｣
-#   digit => ｢9｣
-# ｢9090｣
-#  integer => ｢9090｣
-#   digit => ｢9｣
-#   digit => ｢0｣
-#   digit => ｢9｣
-#   digit => ｢0｣
 ```
 
 ------
@@ -93,15 +69,6 @@ The package provides a Command Line Interface (CLI) script for parsing EBNF. Her
 
 ```shell
 ebnf-parse --help
-```
-```
-# Usage:
-#   ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-r|--relaxed] -- Generates a parser code for a given EBNF grammar.
-#   
-#     <ebnf>                        EBNF text.
-#     -t|--target=<Str>             Target. [default: 'Raku::Grammar']
-#     --name|--parser-name=<Str>    Parser name. [default: 'Whatever']
-#     -r|--relaxed                  Should relaxed EBNF parsing be used or not? [default: True]
 ```
 
 
