@@ -66,10 +66,14 @@ class EBNF::Actions::Raku::Grammar {
     }
 
     method terminal($/) {
-        make $/.Str;
+        my $res = $/.Str;
+        make do given $res {
+            when $_ ~~ /^ <-['"]>+ $/ { "'$_'" }
+            default { $_ }
+        }
     }
 
     method non-terminal($/) {
-        make $/.Str;
+        make "<{$/.Str}>".subst(/^ '<<'/, '<').subst(/'>>' $/, '>');
     }
 }
