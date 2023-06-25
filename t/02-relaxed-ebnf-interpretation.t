@@ -47,10 +47,10 @@ VERB ::= 'hate' | 'love'
 object ::= 'R' | 'WL' | 'Julia'
 ";
 
-## 1
+## 3
 ok ebnf-parse($ebnfCode3):relaxed, 'parsing 1';
 
-## 2
+## 4
 my $grCode4 = q:to/END/;
 grammar MyEBNF {
     regex sentence { <subject> <VERB> <object> }
@@ -61,8 +61,35 @@ grammar MyEBNF {
 END
 
 is
-        ebnf-interpret($ebnfCode3, name => 'MyEBNF',  style => 'relaxed', :!eval).trim.subst(/\s/,''):g,
+        ebnf-interpret($ebnfCode3, name => 'MyEBNF', style => 'relaxed', :!eval).trim.subst(/\s/,''):g,
         $grCode4.trim.subst(/\s/,''):g,
+        'expected generated code';
+
+##===========================================================
+## 5 - 6
+##===========================================================
+my $ebnfCode5 = '
+SENTENCE = SUBJECT VERB OBJECT
+SUBJECT = "I" | "we"
+VERB = "hate" | "love"
+OBJECT = "R" | "WL" | "Julia"
+';
+
+## 5
+ok ebnf-parse($ebnfCode5):relaxed, 'parsing 1';
+
+## 6
+my $grCode6 = q:to/END/;
+grammar MyEBNF {
+    regex SENTENCE { <SUBJECT> <VERB> <OBJECT> }
+ 	regex SUBJECT { "I" | "we" }
+ 	regex VERB { "hate" | "love" }
+    regex OBJECT { "R" | "WL" | "Julia" }
+}
+END
+is
+        ebnf-interpret($ebnfCode5, name => 'MyEBNF', style => 'relaxed', :!eval).trim.subst(/\s/,''):g,
+        $grCode6.trim.subst(/\s/,''):g,
         'expected generated code';
 
 done-testing;
