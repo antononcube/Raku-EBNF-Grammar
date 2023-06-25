@@ -1,0 +1,29 @@
+#!/usr/bin/env perl6
+
+use v6.d;
+
+use EBNF::Grammar;
+
+my %*SUB-MAIN-OPTS = :named-anywhere;
+
+#| Generates a parser code for a given EBNF grammar.
+multi MAIN(
+        $ebnf,                                           #= EBNF text.
+        Str :t(:$target) is copy = 'Raku::Grammar',      #= Target.
+        Str :name(:$parser-name) is copy = 'Whatever',   #= Parser name.
+        Bool :r(:$relaxed) = True,                       #= Should relaxed EBNF parsing be used or not?
+           ) {
+
+    $target = do given $target.lc {
+        when $_ ∈ <raku perl6 grammar> { 'Raku::Grammar' }
+        when $_ ∈ <functionalparsers combinators> { 'Raku::FunctionalParsers' }
+        when 'wl' { 'WL::FunctionalParsers' }
+        default { $target }
+    }
+
+    my $res = ebnf-interpret($ebnf,
+            name => $parser-name eq 'Whatever' ?? Whatever !! $parser-name,
+            actions => $target, :!eval);
+
+    say $res;
+}
