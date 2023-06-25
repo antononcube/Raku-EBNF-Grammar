@@ -39,6 +39,7 @@ our sub ebnf-interpret(Str:D $command,
                        Bool :$eval = False) is export {
 
 
+    # Process name
     if $name.isa(Whatever) {
         $name = 'EBNF_' ~ DateTime.now.Instant.Num.subst('.', '_');
     }
@@ -46,20 +47,40 @@ our sub ebnf-interpret(Str:D $command,
     die 'The argument $name is expected to be a string or Whatever'
     unless $name ~~ Str;
 
-    if $actions.isa(Whatever) {
-        $actions = EBNF::Actions::Raku::Grammar.new(:$name);
+    # Process actions
+    if $actions.isa(Whatever) { $actions = 'Raku::Grammar'; }
+
+    $actions = do given $actions {
+        when $_ ~~ Str && $_.lc ∈ <raku raku::grammar grammar> {
+            EBNF::Actions::Raku::Grammar.new(:$name);
+        }
+
+        when $_ ~~ Str && $_.lc ∈ <raku::functionalparsers functionalparsers combinators> {
+            EBNF::Actions::Raku::Functiona.new(:$name);
+        }
+
+        when $_ ~~ Str {
+            ::("EBNF::Actions::{$actions}").new(:$name);
+        }
+
+        default {
+            $actions
+        }
     }
 
+    # Parse / interpret
     my $gr = do if $relaxed {
         EBNF::Grammar::Relaxed.parse($command, :$rule, :$actions).made;
     } else {
         EBNF::Grammar.parse($command, :$rule, :$actions).made;
     }
 
+    # Evaluate if specified
     if $eval {
         use MONKEY-SEE-NO-EVAL;
         return EVAL($gr);
     }
 
+    # Result
     return $gr;
 }
