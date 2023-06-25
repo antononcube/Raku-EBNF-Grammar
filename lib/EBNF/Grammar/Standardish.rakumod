@@ -9,15 +9,17 @@ role EBNF::Grammar::Standardish {
     regex WS { <ws> }
     regex terminal { '"' <-['"]>+ '"' | '\'' <-['"]>+ '\''  }
     regex non-terminal { '<' <identifier> '>' }
-    regex terminator { ";" | "." }
+    token terminator { ";" | "." }
     regex parens { '(' <.WS> <rhs> <.WS> ')' }
     regex option { '[' <.WS> <rhs> <.WS> ']' }
     regex repetition { '{' <.WS> <rhs> <.WS> '}' }
     regex term { <parens> | <option> | <repetition> | <terminal> | <non-terminal> }
     token modifier { '?' | '*' | '+' }
     regex factor { <term> <.WS> <modifier> | <term> <.WS> }
-    regex sequence { <.WS> <factor>+ % [ <.WS> ',' <.WS> ] <.WS> }
-    regex alternatives { <.WS> <sequence>+ % [<.WS> "|" <.WS> ] }
+    token seq-sep { ',' }
+    regex sequence { <.WS> <factor>+ % [ <.WS> <.seq-sep> <.WS> ] <.WS> }
+    token alt-sep { '|' }
+    regex alternatives { <.WS> <sequence>+ % [<.WS> <.alt-sep> <.WS> ] }
     regex rhs { <alternatives> }
     regex lhs { <non-terminal> }
     token assign-symbol { '=' | ':=' | '::=' }
