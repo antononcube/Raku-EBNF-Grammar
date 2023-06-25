@@ -2,6 +2,7 @@ use v6.d;
 
 use EBNF::Grammar::Standardish;
 use EBNF::Actions::Raku::Grammar;
+use EBNF::Actions::Raku::FunctionalParsers;
 
 #-----------------------------------------------------------
 grammar EBNF::Grammar
@@ -56,7 +57,7 @@ our sub ebnf-interpret(Str:D $command,
         }
 
         when $_ ~~ Str && $_.lc ∈ <raku::functionalparsers functionalparsers combinators> {
-            EBNF::Actions::Raku::Functiona.new(:$name);
+            EBNF::Actions::Raku::FunctionalParsers.new(:$name);
         }
 
         when $_ ~~ Str {
