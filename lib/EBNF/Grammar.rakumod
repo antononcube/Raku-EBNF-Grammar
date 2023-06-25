@@ -3,9 +3,10 @@ use v6.d;
 use EBNF::Grammar::Standardish;
 use EBNF::Actions::Raku::Grammar;
 
+#-----------------------------------------------------------
 grammar EBNF::Grammar
         does EBNF::Grammar::Standardish {
-    regex TOP { <pGRAMMAR> }
+    regex TOP { <ebnf> }
 }
 
 #-----------------------------------------------------------
@@ -13,10 +14,12 @@ our sub ebnf-subparse(Str:D $command, Str:D :$rule = 'TOP') is export {
     EBNF::Grammar.subparse($command, :$rule);
 }
 
+#-----------------------------------------------------------
 our sub ebnf-parse(Str:D $command, Str:D :$rule = 'TOP') is export {
     EBNF::Grammar.parse($command, :$rule);
 }
 
+#-----------------------------------------------------------
 our sub ebnf-interpret(Str:D $command,
                        Str:D:$rule = 'TOP',
                        :$actions is copy = Whatever,

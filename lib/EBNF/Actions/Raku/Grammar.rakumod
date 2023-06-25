@@ -8,68 +8,68 @@ class EBNF::Actions::Raku::Grammar {
         make $/.values[0].made;
     }
 
-    method pGRAMMAR($/) {
+    method ebnf($/) {
         my $res = "grammar {self.name} \{\n\t";
         $res ~= $/.values>>.made.join("\n\t");
         $res ~= "\n}";
         make $res;
     }
 
-    method pRULE($/) {
-        make "regex {$<pLHS>.made} \{ {$<pRHS>.made} \}";
+    method rule($/) {
+        make "regex {$<lhs>.made} \{ {$<rhs>.made} \}";
     }
 
-    method pCONCATENATION($/) {
+    method sequence($/) {
         make $/.values>>.made.join(' ');
     }
 
-    method pALTERNATION($/) {
+    method alternatives($/) {
         make $/.values>>.made.join(' | ');
     }
 
-    method pFACTOR($/) {
-        if $<pMODIFIER> {
-            make "[{ $<pTERM>.made }]{ $<pMODIFIER>.Str }";
+    method factor($/) {
+        if $<modifier> {
+            make "[{ $<term>.made }]{ $<modifier>.Str }";
         } else {
-            make $<pTERM>.made;
+            make $<term>.made;
         }
     }
 
-    method pTERM($/) {
+    method term($/) {
         make $/.values[0].made;
     }
 
-    method pPARENS($/) {
+    method parens($/) {
         make $/.values[0].made;
     }
 
-    method pOPTION($/) {
+    method option($/) {
         my $res = $/.values[0].made;
         make $res.contains(/\s/) ?? "[$res]?" !! "$res?";
     }
 
-    method pREPETITION($/) {
+    method repetition($/) {
         my $res = $/.values[0].made;
         make $res.contains(/\s/) ?? "[$res]*" !! "$res*";
     }
 
-    method pRHS($/) {
+    method rhs($/) {
         make $/.values[0].made;
     }
 
-    method pLHS($/) {
+    method lhs($/) {
         make $/.values[0].made.subst(/^ '<'/, '').subst(/'>' $/, '');
     }
 
-    method pIDENTIFIER($/) {
+    method identifier($/) {
         make $/.Str;
     }
 
-    method pTERMINAL($/) {
+    method terminal($/) {
         make $/.Str;
     }
 
-    method pNONTERMINAL($/) {
+    method non-terminal($/) {
         make $/.Str;
     }
 }
