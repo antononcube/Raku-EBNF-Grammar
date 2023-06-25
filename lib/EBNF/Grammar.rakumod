@@ -16,9 +16,22 @@ grammar EBNF::Grammar::Relaxed is export
         does EBNF::Grammar::Standardish {
 
     token terminator { ";" | "." | \v* }
-    token assign-symbol { '=' | ':=' | '::=' | '->' }
+    token assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
     token seq-sep { ',' | \h* }
+    regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
     regex non-terminal { '<' <identifier> '>' || <identifier> }
+    regex TOP { <ebnf> }
+};
+
+#-----------------------------------------------------------
+grammar EBNF::Grammar::Inverted is export
+                               does EBNF::Grammar::Standardish {
+
+    token terminator { ";" | "." | \v* }
+    token assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
+    token seq-sep { ',' | \h* }
+    regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' || \w+ }
+    regex non-terminal { '<' <identifier> '>' }
     regex TOP { <ebnf> }
 };
 
@@ -45,7 +58,7 @@ our sub ebnf-interpret(Str:D $command,
                        Str:D:$rule = 'TOP',
                        :$actions is copy = Whatever,
                        :$name is copy = Whatever,
-                       Bool :$relaxed = False,
+                       :$style = 'default',
                        Bool :$eval = False) is export {
 
 
@@ -79,10 +92,22 @@ our sub ebnf-interpret(Str:D $command,
     }
 
     # Parse / interpret
-    my $gr = do if $relaxed {
-        EBNF::Grammar::Relaxed.parse($command, :$rule, :$actions).made;
-    } else {
-        EBNF::Grammar.parse($command, :$rule, :$actions).made;
+    my $gr = do given $style {
+        when $_ ~~ Str && $_.lc ∈ <relaxed simpler> {
+            EBNF::Grammar::Relaxed.parse($command, :$rule, :$actions).made;
+        }
+
+        when $_ ~~ Str && $_.lc ∈ <inverted> {
+            EBNF::Grammar::Inverted.parse($command, :$rule, :$actions).made;
+        }
+
+        when $_ ~~ Str && $_.lc ∈ <default standard> {
+            EBNF::Grammar.parse($command, :$rule, :$actions).made;
+        }
+
+        default {
+            die "Do not know how to process the argument style. Expected values are <default inverted relaxed> or Whatever";
+        }
     }
 
     # Evaluate if specified
