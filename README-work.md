@@ -6,18 +6,21 @@ Raku package for Extended Backus-Naur Form (EBNF) parsing and interpretation.
 
 The grammar follows the description of the Wikipedia entry 
 ["Extended Backus–Naur form"](https://en.wikipedia.org/wiki/Extended_Backus–Naur_form), [Wk1],
-which refers the *proposed* ISO/IEC 14977 standard, by R. S. Scowen, page 7, table 1. [RS1, ISO1].
+which refers to the *proposed* ISO/IEC 14977 standard, by R. S. Scowen, page 7, table 1. [RS1, ISO1].
 
 ### Motivation
 
 The main motivation for this package is to have:
-- Multiple EBNF styles parsed
-- Grammar generation for multiple languages
+1. Multiple EBNF styles parsed (quickly)
+2. Grammar generation for multiple languages
 
-I considered extending ["Grammar::BNF"](https://raku.land/github:tadzik/Grammar::BNF), 
+The motivation comes from the the "need" to parse (and interpret) EBNF grammars
+generated with Large Language Models (LLMs), like ChatGPT and PaLM. For more details see
+["Incremental grammar enhancement"](https://github.com/antononcube/Raku-EBNF-Grammar/blob/main/doc/Incremental-grammar-enhancement.md).
+
+I considered extending ["Grammar::BNF"](https://raku.land/github:tadzik/Grammar::BNF),
 but ultimately decided that "Grammar::BNF" needs too much refactoring for my purposes,
 and, well, it is for BNF not EBNF.
-
 
 ------
 
@@ -105,7 +108,6 @@ The package provides a Command Line Interface (CLI) script for parsing EBNF. Her
 ebnf-parse --help
 ```
 
-
 ------
 
 ## Implementation notes
@@ -115,6 +117,53 @@ ebnf-parse --help
    - This corresponds to the design in "FunctionalParsers". 
 3. Tokens and regexes were renamed. (More concise, easier to read names.)
 4. Implemented the "relaxed" version of the standard EBNF.
+
+------
+
+## Comparison with other packages
+
+The following table overviews the similarities and differences of this package
+with the packages "FunctionalParsers" and "Grammar::TokenProcessing":
+
+| Feature                          | FunctionalParsers | EBNF::Grammar | Grammar::TokenProcessing | 
+|:---------------------------------|:-----------------:|:-------------:|:------------------------:|
+| **Parsing EBNF:**                |                   |               |            ✔             |           
+| Standard                         |         ✔         |       ✔       |                          |           
+| Modified versions                |         ✔         |       ✔       |                          |           
+| Whatever                         |         ✔         |               |                          |           
+| Automatic top rule determination |         ✔         |               |                          |           
+| **Parsing Raku grammar:**        |                   |               |            ✔             |           
+| Pick left and pick right         |         ✔         |               |                          |           
+| Skip element                     |                   |               |            ✔             |           
+| Automatic top rule determination |         ✔         |               |            ✔             |           
+| Comprehensive quantifiers        |                   |               |            ✔             |           
+| **Interpretation:**              |         ✔         |       ✔       |                          |           
+| Raku grammar                     |         ✔         |       ✔       |                          |           
+| WL grammar                       |         ✔         |               |                          |           
+| Java functional parsers          |         ✔         |               |                          |           
+| Raku functional parsers          |         ✔         |               |                          |           
+| Scala functional parsers         |         ✔         |               |                          |           
+| WL functional parsers            |         ✔         |       ✔       |                          |           
+| **Random sentence generation**   |         ✔         |               |            ✔             |           
+| **CLI**                          |         ✔         |       ✔       |            ✔             |           
+
+Here are some additional- and clarification points:
+
+- Since one of the motivations for "FunctionalParsers" and "EBNF::Grammar" is parsing and interpretation of EBNF
+grammars derived with Large Language Models (LLMs) multiple EBNF variants have to be parsed.
+  - And a `Whatever` parsing method would be of great convenience.
+
+- It is envisioned that "EBNF::Grammar" is completed with functionalities from "Grammar::TokenProcessing". 
+  - (Like random sentence generation.)  
+
+- Both "FunctionalParsers" and "EBNF::Grammar" generate Functional Parsers (FPs) for other programming languages
+because many languages have packages implementing FPs.
+
+- The interpretations to FPs of other programming languages with "EBNF::Grammar" will be also implemented.
+
+- In many cases the parsing with "EBNF::Grammar" is much faster than "FunctionalParsers".
+  - The conjecture of that that is would be case was the one of the motivations for implementing of "EBNF::Grammar".
+
 
 ------
 
