@@ -2,10 +2,18 @@
 
 ## Introduction
 
+This document demonstrates how to use Large Language Models (LLMs) and Extended Backus-Naur Form (EBNF)
+to generate and incrementally develop grammars for Domain Specific Languages (DSLs).
 
 -------
 
 ## Procedure outline
+
+### If LLM speaks Raku
+
+*TBD...*
+
+### Using BNF
 
 ```mermaid
 graph TD
@@ -92,7 +100,7 @@ $variations1
 ```
 ```
 # <sentence> ::= <subject> <verb> <object>
-# <subject> ::= I | we
+# <subject> ::= I | We
 # <verb> ::= hate | love
 # <object> ::= R | WL | Julia
 ```
@@ -102,7 +110,7 @@ my $variations2 = $variations1.lines.grep({ EBNF::Grammar::Relaxed.parse($_, rul
 ```
 ```
 # <sentence> ::= <subject> <verb> <object>
-# <subject> ::= I | we
+# <subject> ::= I | We
 # <verb> ::= hate | love
 # <object> ::= R | WL | Julia
 ```
@@ -114,7 +122,7 @@ say $grCode;
 ```
 # grammar First {
 # 	regex sentence { <subject> <verb> <object> }
-# 	regex subject { 'I' | 'we' }
+# 	regex subject { 'I' | 'We' }
 # 	regex verb { 'hate' | 'love' }
 # 	regex object { 'R' | 'WL' | 'Julia' }
 # }
@@ -141,17 +149,17 @@ my @genSentences = random-sentence-generation($gr, $grTopRule) xx 12;
 .say for @genSentences;
 ```
 ```
-# we love R
-# we hate R
-# we love R
-# we hate R
-# we hate Julia
-# we love Julia
+# I hate Julia
+# We love Julia
+# We hate Julia
 # I love WL
+# I hate R
+# We love WL
+# We hate WL
 # I love Julia
-# we hate R
+# I hate R
+# I love R
 # I hate WL
-# I love Julia
 # I love R
 ```
 

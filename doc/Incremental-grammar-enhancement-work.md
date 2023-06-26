@@ -2,10 +2,18 @@
 
 ## Introduction
 
+This document demonstrates how to use Large Language Models (LLMs) and Extended Backus-Naur Form (EBNF)
+to generate and incrementally develop grammars for Domain Specific Languages (DSLs).
 
 -------
 
 ## Procedure outline
+
+### If LLM speaks Raku
+
+*TBD...*
+
+### Using BNF
 
 ```mermaid
 graph TD
