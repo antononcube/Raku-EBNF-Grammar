@@ -11,7 +11,7 @@ multi MAIN(
         $ebnf,                                           #= EBNF text.
         Str :t(:$target) is copy = 'Raku::Grammar',      #= Target.
         Str :name(:$parser-name) is copy = 'Whatever',   #= Parser name.
-        Bool :r(:$relaxed) = True,                       #= Should relaxed EBNF parsing be used or not?
+        Str :s(:$style) = 'Standard',                    #= EBNF style, one of 'Standard', 'Inverted', 'Relaxed', or 'Whatever'.
            ) {
 
     $target = do given $target.lc {
@@ -23,7 +23,9 @@ multi MAIN(
 
     my $res = ebnf-interpret($ebnf,
             name => $parser-name eq 'Whatever' ?? Whatever !! $parser-name,
-            actions => $target, :!eval);
+            actions => $target,
+            style => $style eq 'Whatever' ?? Whatever !! $style,
+            :!eval);
 
     say $res;
 }
