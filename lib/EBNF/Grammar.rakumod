@@ -58,7 +58,7 @@ our sub ebnf-interpret(Str:D $command,
                        Str:D:$rule = 'TOP',
                        :$actions is copy = Whatever,
                        :$name is copy = Whatever,
-                       :$style = 'default',
+                       :$style = 'Standard',
                        Bool :$eval = False) is export {
 
 
@@ -106,7 +106,7 @@ our sub ebnf-interpret(Str:D $command,
         }
 
         default {
-            die "Do not know how to process the argument style. Expected values are <default inverted relaxed> or Whatever";
+            die "Do not know how to process the argument style. Expected values are <Inverted Relaxed Standard> or Whatever";
         }
     }
 
