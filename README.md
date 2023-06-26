@@ -56,7 +56,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687798548_396623 {
+# grammar EBNF_1687800438_756987 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -136,18 +136,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# We hate Perl
-# We 🤮 Python
-# I ♥️ R
-# I really love Python
-# We ♥️ Perl
-# We 🤮 Julia
-# We love Python
-# We ♥️ WL
-# We hate Julia
-# We 🤮 WL
-# I really love Perl
-# I hate R
+# I 🤮 Python
+# I really love WL
+# I 🤮 R
+# I 🤮 WL
+# We love Perl
+# We love Julia
+# We love R
+# We ♥️ R
+# I ♥️ Julia
+# I hate Julia
+# We love Perl
+# We really love Perl
 ```
 
 ------
@@ -200,6 +200,7 @@ with the packages "FunctionalParsers" and "Grammar::TokenProcessing":
 | Comprehensive quantifiers        |                   |               |            ✔             |           
 | **Interpretation:**              |         ✔         |       ✔       |                          |           
 | Raku grammar                     |         ✔         |       ✔       |                          |           
+| EBNF grammar (standard)          |         ✔         |               |            ✔             |           
 | WL grammar                       |         ✔         |               |                          |           
 | Java functional parsers          |         ✔         |               |                          |           
 | Raku functional parsers          |         ✔         |               |                          |           

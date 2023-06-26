@@ -139,6 +139,7 @@ with the packages "FunctionalParsers" and "Grammar::TokenProcessing":
 | Comprehensive quantifiers        |                   |               |            ✔             |           
 | **Interpretation:**              |         ✔         |       ✔       |                          |           
 | Raku grammar                     |         ✔         |       ✔       |                          |           
+| EBNF grammar (standard)          |         ✔         |               |            ✔             |           
 | WL grammar                       |         ✔         |               |                          |           
 | Java functional parsers          |         ✔         |               |                          |           
 | Raku functional parsers          |         ✔         |               |                          |           
