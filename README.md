@@ -53,7 +53,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687719744_8426476 {
+# grammar EBNF_1687748357_612614 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -133,18 +133,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# We ♥️ Perl
-# We 🤮 WL
-# I hate Julia
+# We really love Perl
+# We ♥️ WL
 # We hate Julia
-# I really love R
-# I love Julia
-# I really love Python
-# I 🤮 Julia
-# I love Julia
+# We hate Perl
+# We really love Python
+# We hate WL
+# We hate Python
+# We really love Julia
+# I hate Perl
+# We love R
 # I ♥️ WL
-# We hate Julia
-# We 🤮 R
+# I ♥️ Python
 ```
 
 ------
@@ -158,12 +158,12 @@ ebnf-parse --help
 ```
 ```
 # Usage:
-#   ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-r|--relaxed] -- Generates a parser code for a given EBNF grammar.
+#   ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-s|--style=<Str>] -- Generates a parser code for a given EBNF grammar.
 #   
 #     <ebnf>                        EBNF text.
 #     -t|--target=<Str>             Target. [default: 'Raku::Grammar']
 #     --name|--parser-name=<Str>    Parser name. [default: 'Whatever']
-#     -r|--relaxed                  Should relaxed EBNF parsing be used or not? [default: True]
+#     -s|--style=<Str>              EBNF style, one of 'Standard', 'Inverted', 'Relaxed', or 'Whatever'. [default: 'Standard']
 ```
 
 
