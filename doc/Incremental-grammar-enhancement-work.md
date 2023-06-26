@@ -81,7 +81,7 @@ my @startSentences = [
 
 ```perl6
 my $request1 = "Generate BNF grammar for the sentences: {@startSentences.join(', ')}";
-my $variations1 = palm-generate-text($request1, format=>'values', temperature => 0.85, max-output-tokens => 600);
+my $variations1 = palm-generate-text($request1, format=>'values', temperature => 0.15, max-output-tokens => 600);
 $variations1
 ```
 
@@ -90,14 +90,21 @@ my $variations2 = $variations1.lines.grep({ EBNF::Grammar::Relaxed.parse($_, rul
 ```
 
 ```perl6
-my $grCode = ebnf-interpret($variations2, style => 'relaxed', name => 'First');
+my $grCode = ebnf-interpret($variations2, style => 'inverted', name => 'First');
 say $grCode;
 ```
 
 ```perl6
-my $gr = ebnf-interpret($variations2, name=>'First'):eval;
+my $gr = ebnf-interpret($variations2, style => 'inverted', name=>'First'):eval;
+```
 
-my @genSentences = random-sentence-generation($gr, '<S>') xx 12;
+```perl6
+my $grTopRule = "<{grammar-top-rule($grCode)}>";
+say $grTopRule;
+```
+
+```perl6
+my @genSentences = random-sentence-generation($gr, $grTopRule) xx 12;
 
 .say for @genSentences;
 ```

@@ -87,54 +87,72 @@ my @startSentences = [
 
 ```perl6
 my $request1 = "Generate BNF grammar for the sentences: {@startSentences.join(', ')}";
-my $variations1 = palm-generate-text($request1, format=>'values', temperature => 0.85, max-output-tokens => 600);
+my $variations1 = palm-generate-text($request1, format=>'values', temperature => 0.15, max-output-tokens => 600);
 $variations1
 ```
 ```
-# ```
-# sentence : noun_phrase verb noun_phrase
-# noun_phrase : pronoun | proper_noun
-# verb : 'love' | 'hate'
-# pronoun : 'I' | 'we'
-# proper_noun : 'R' | 'WL' | 'Julia'
-# ```
+# <sentence> ::= <subject> <verb> <object>
+# <subject> ::= I | we
+# <verb> ::= hate | love
+# <object> ::= R | WL | Julia
 ```
 
 ```perl6
 my $variations2 = $variations1.lines.grep({ EBNF::Grammar::Relaxed.parse($_, rule => 'rule') }).join("\n");
 ```
 ```
-# sentence : noun_phrase verb noun_phrase
-# noun_phrase : pronoun | proper_noun
-# verb : 'love' | 'hate'
-# pronoun : 'I' | 'we'
-# proper_noun : 'R' | 'WL' | 'Julia'
+# <sentence> ::= <subject> <verb> <object>
+# <subject> ::= I | we
+# <verb> ::= hate | love
+# <object> ::= R | WL | Julia
 ```
 
 ```perl6
-my $grCode = ebnf-interpret($variations2, style => 'relaxed', name => 'First');
+my $grCode = ebnf-interpret($variations2, style => 'inverted', name => 'First');
 say $grCode;
 ```
 ```
 # grammar First {
-# 	regex sentence { <noun_phrase> <verb> <noun_phrase> }
-# 	regex noun_phrase { <pronoun> | <proper_noun> }
-# 	regex verb { 'love' | 'hate' }
-# 	regex pronoun { 'I' | 'we' }
-# 	regex proper_noun { 'R' | 'WL' | 'Julia' }
+# 	regex sentence { <subject> <verb> <object> }
+# 	regex subject { 'I' | 'we' }
+# 	regex verb { 'hate' | 'love' }
+# 	regex object { 'R' | 'WL' | 'Julia' }
 # }
 ```
 
 ```perl6
-my $gr = ebnf-interpret($variations2, name=>'First'):eval;
+my $gr = ebnf-interpret($variations2, style => 'inverted', name=>'First'):eval;
+```
+```
+# (First)
+```
 
-my @genSentences = random-sentence-generation($gr, '<S>') xx 12;
+```perl6
+my $grTopRule = "<{grammar-top-rule($grCode)}>";
+say $grTopRule;
+```
+```
+# <sentence>
+```
+
+```perl6
+my @genSentences = random-sentence-generation($gr, $grTopRule) xx 12;
 
 .say for @genSentences;
 ```
 ```
-#ERROR: Constraint type check failed in binding to parameter '$code'; expected anonymous constraint to be met but got Any (Any)
-# Nil
+# we love R
+# we hate R
+# we love R
+# we hate R
+# we hate Julia
+# we love Julia
+# I love WL
+# I love Julia
+# we hate R
+# I hate WL
+# I love Julia
+# I love R
 ```
 
 -------
