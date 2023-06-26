@@ -20,7 +20,7 @@ my $ebnfCode1 = "
 ";
 
 ## 1
-ok ebnf-parse($ebnfCode1):relaxed, 'parsing 1';
+ok ebnf-parse($ebnfCode1, style => 'Relaxed'), 'parsing 1';
 
 ## 2
 my $grCode2 = q:to/END/;
@@ -48,7 +48,7 @@ object ::= 'R' | 'WL' | 'Julia'
 ";
 
 ## 3
-ok ebnf-parse($ebnfCode3):relaxed, 'parsing 1';
+ok ebnf-parse($ebnfCode3, style => 'Relaxed'), 'parsing 1';
 
 ## 4
 my $grCode4 = q:to/END/;
@@ -76,7 +76,7 @@ OBJECT = "R" | "WL" | "Julia"
 ';
 
 ## 5
-ok ebnf-parse($ebnfCode5):relaxed, 'parsing 1';
+ok ebnf-parse($ebnfCode5, style => 'Relaxed'), 'parsing 1';
 
 ## 6
 my $grCode6 = q:to/END/;
@@ -87,6 +87,7 @@ grammar MyEBNF {
     regex OBJECT { "R" | "WL" | "Julia" }
 }
 END
+
 is
         ebnf-interpret($ebnfCode5, name => 'MyEBNF', style => 'relaxed', :!eval).trim.subst(/\s/,''):g,
         $grCode6.trim.subst(/\s/,''):g,
