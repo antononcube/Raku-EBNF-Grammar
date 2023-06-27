@@ -39,33 +39,25 @@ grammar EBNF::Grammar::Inverted is export
 my $msgStyle = "Do not know how to process the argument style." ~
         "Expected values are <Inverted Relaxed Standard> or Whatever";
 
+sub pick-parser(:$style!) {
+
+    return do given $style {
+        when $_ ~~ Str && $_.lc ∈ <relaxed simpler>  { EBNF::Grammar::Relaxed; }
+        when $_ ~~ Str && $_.lc ∈ <inverted>         { EBNF::Grammar::Inverted; }
+        when $_ ~~ Str && $_.lc ∈ <default standard> { EBNF::Grammar; }
+
+        default { die $msgStyle; }
+    }
+}
+
+#-----------------------------------------------------------
+
 our sub ebnf-subparse(Str:D $command,
                    Str:D :$rule = 'TOP',
                    :$style = 'Standard') is export {
-    # This code is repeated to large extend below,
-    # but it seems too much effort to properly re-factor.
-    # It would have been nice to use .^lookup e.g.
-    #   EBNF::Grammar::Relaxed.^lookup($method)(EBNF::Grammar::Relaxed.new(orig => $command), :$rule);
-    # But after trying for awhile to apply advice here https://stackoverflow.com/a/75128545
-    # I did not get the "universal" code working.
 
-    return do given $style {
-        when $_ ~~ Str && $_.lc ∈ <relaxed simpler> {
-            EBNF::Grammar::Relaxed.subparse($command, :$rule);
-        }
-
-        when $_ ~~ Str && $_.lc ∈ <inverted> {
-            EBNF::Grammar::Inverted.subparse($command, :$rule);
-        }
-
-        when $_ ~~ Str && $_.lc ∈ <default standard> {
-            EBNF::Grammar.parse($command, :$rule);
-        }
-
-        default {
-            die $msgStyle;
-        }
-    }
+    my $p = pick-parser(:$style);
+    return $p.subparse($command, :$rule);
 }
 
 #-----------------------------------------------------------
@@ -73,23 +65,8 @@ our sub ebnf-parse(Str:D $command,
                    Str:D :$rule = 'TOP',
                    :$style = 'Standard') is export {
 
-    return do given $style {
-        when $_ ~~ Str && $_.lc ∈ <relaxed simpler> {
-            EBNF::Grammar::Relaxed.parse($command, :$rule);
-        }
-
-        when $_ ~~ Str && $_.lc ∈ <inverted> {
-            EBNF::Grammar::Inverted.parse($command, :$rule);
-        }
-
-        when $_ ~~ Str && $_.lc ∈ <default standard> {
-            EBNF::Grammar.parse($command, :$rule);
-        }
-
-        default {
-            die $msgStyle;
-        }
-    }
+    my $p = pick-parser(:$style);
+    return $p.parse($command, :$rule);
 }
 
 #-----------------------------------------------------------
@@ -131,23 +108,8 @@ our sub ebnf-interpret(Str:D $command,
     }
 
     # Parse / interpret
-    my $gr = do given $style {
-        when $_ ~~ Str && $_.lc ∈ <relaxed simpler> {
-            EBNF::Grammar::Relaxed.parse($command, :$rule, :$actions).made;
-        }
-
-        when $_ ~~ Str && $_.lc ∈ <inverted> {
-            EBNF::Grammar::Inverted.parse($command, :$rule, :$actions).made;
-        }
-
-        when $_ ~~ Str && $_.lc ∈ <default standard> {
-            EBNF::Grammar.parse($command, :$rule, :$actions).made;
-        }
-
-        default {
-            die $msgStyle;
-        }
-    }
+    my $p = pick-parser(:$style);
+    my $gr = $p.parse($command, :$rule, :$actions).made;
 
     # Evaluate if specified
     if $eval {
