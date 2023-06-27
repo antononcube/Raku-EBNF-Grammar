@@ -165,6 +165,10 @@ because many languages have packages implementing FPs.
 - In many cases the parsing with "EBNF::Grammar" is much faster than "FunctionalParsers".
   - The conjecture of that that is would be case was the one of the motivations for implementing of "EBNF::Grammar".
 
+- The package "Grammar::TokenProcessing" can translate Raku grammars into EBNFs. 
+
+- Both "FunctionalParsers" and "EBNF::Grammar" can translate EBNFs into Raku grammars.
+
 
 ------
 

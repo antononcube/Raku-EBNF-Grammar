@@ -56,7 +56,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687800438_756987 {
+# grammar EBNF_1687832261_8367398 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -136,18 +136,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# I 🤮 Python
-# I really love WL
-# I 🤮 R
-# I 🤮 WL
-# We love Perl
-# We love Julia
-# We love R
-# We ♥️ R
-# I ♥️ Julia
-# I hate Julia
-# We love Perl
+# We love WL
+# I 🤮 Perl
+# We 🤮 Julia
+# We hate WL
 # We really love Perl
+# I love Perl
+# We ♥️ R
+# I hate WL
+# I 🤮 WL
+# We love R
+# We ♥️ Python
+# I ♥️ Julia
 ```
 
 ------
@@ -225,6 +225,10 @@ because many languages have packages implementing FPs.
 
 - In many cases the parsing with "EBNF::Grammar" is much faster than "FunctionalParsers".
   - The conjecture of that that is would be case was the one of the motivations for implementing of "EBNF::Grammar".
+
+- The package "Grammar::TokenProcessing" can translate Raku grammars into EBNFs. 
+
+- Both "FunctionalParsers" and "EBNF::Grammar" can translate EBNFs into Raku grammars.
 
 
 ------
