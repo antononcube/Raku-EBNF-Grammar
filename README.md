@@ -56,7 +56,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687832261_8367398 {
+# grammar EBNF_1687876259_093477 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -136,18 +136,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# We love WL
-# I 🤮 Perl
-# We 🤮 Julia
-# We hate WL
-# We really love Perl
-# I love Perl
-# We ♥️ R
-# I hate WL
-# I 🤮 WL
-# We love R
-# We ♥️ Python
-# I ♥️ Julia
+# I ♥️ Perl
+# I hate Julia
+# We hate R
+# I love Julia
+# We 🤮 R
+# We really love R
+# I ♥️ Perl
+# We really love Julia
+# I ♥️ WL
+# We love Python
+# We 🤮 WL
+# I hate Python
 ```
 
 ------
@@ -174,7 +174,7 @@ ebnf-parse --help
 ## Implementation notes
 
 1. The first version of "EBNF::Grammar::Standardish" was *generated* with "FunctionalParsers", [AAp1], using the EBNF grammar (given in EBNF) in [Wk1].
-2. Refactored `<term>` (originally `<pTERM>`) into separate parenthesized, optional, repeated specs.
+2. Refactored `<term>` (originally `<pTERM>`) into separate parenthesized, optional, and repeated specs.
    - This corresponds to the design in "FunctionalParsers". 
 3. Tokens and regexes were renamed. (More concise, easier to read names.)
 4. Implemented the "relaxed" version of the standard EBNF.
@@ -221,15 +221,38 @@ grammars derived with Large Language Models (LLMs) multiple EBNF variants have t
 - Both "FunctionalParsers" and "EBNF::Grammar" generate Functional Parsers (FPs) for other programming languages
 because many languages have packages implementing FPs.
 
-- The interpretations to FPs of other programming languages with "EBNF::Grammar" will be also implemented.
+- The interpretations to FPs of other programming languages (Java, Swift) with "EBNF::Grammar" will be also implemented.
 
 - In many cases the parsing with "EBNF::Grammar" is much faster than "FunctionalParsers".
-  - The conjecture of that that is would be case was the one of the motivations for implementing of "EBNF::Grammar".
+  - The conjecture that that would be case was one of the motivations for implementing of "EBNF::Grammar".
 
-- The package "Grammar::TokenProcessing" can translate Raku grammars into EBNFs. 
+- Cross-interfacing:
+  - The package "Grammar::TokenProcessing" can translate Raku grammars into EBNFs.
+  - Both "FunctionalParsers" and "EBNF::Grammar" can translate EBNFs into Raku grammars.
+  - "EBNF::Grammar" can generate parser classes with utilizing the FPs of "FunctionalParsers". 
+  
+The following diagram summarizes relationships (and implied workflows) in the comparison table
+and clarification points above:
 
-- Both "FunctionalParsers" and "EBNF::Grammar" can translate EBNFs into Raku grammars.
-
+```mermaid
+graph TD
+    EBNF>EBNF]
+    RakuGrammar>"Raku grammar"]
+    FPClass>"Functional parsers class<br/>(grammar)"]
+    FPs[[FunctionalParsers]]
+    EBNFGram[[EBNF::Grammar]]
+    GT[[Grammar::TokenProcessing]]
+    RS>Random sentences]
+    EBNF --> FPs 
+    EBNF --> EBNFGram
+    EBNFGram --> FPClass
+    FPs --> FPClass
+    EBNFGram --> RakuGrammar
+    FPs --> RakuGrammar
+    RakuGrammar --> GT
+    GT --> RS
+    FPs --> RS 
+```
 
 ------
 
