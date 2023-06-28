@@ -2,6 +2,7 @@ use v6.d;
 
 use EBNF::Grammar::Standardish;
 use EBNF::Actions::MermaidJS::Graph;
+use EBNF::Actions::Raku::AST;
 use EBNF::Actions::Raku::Grammar;
 use EBNF::Actions::Raku::FunctionalParsers;
 use EBNF::Actions::WL::FunctionalParsers;
@@ -91,6 +92,10 @@ our sub ebnf-interpret(Str:D $command,
     if $actions.isa(Whatever) { $actions = 'Raku::Grammar'; }
 
     $actions = do given $actions {
+        when $_ ~~ Str && $_.lc ∈ <raku::ast ast> {
+            EBNF::Actions::Raku::AST.new(:$name);
+        }
+
         when $_ ~~ Str && $_.lc ∈ <raku raku::grammar grammar> {
             EBNF::Actions::Raku::Grammar.new(:$name);
         }
