@@ -14,29 +14,15 @@ class EBNF::Actions::MermaidJS::Graph
 
         my ($name, $node);
 
-        given $spec {
-            when 'alt' {
-                $name = "alt{$!altCount++}";
-                $node = 'or';
-            }
-
-            when 'seq' {
-                $name = "seq{$!altCount++}";
-                $node = 'and';
-            }
-
-            when $_ ~~ / '<' .*? '>' / {
-                $name = $spec.substr(1, *- 1);
-                $node = "([$name])";
-                $name = "NT:{ $name }";
-                %!nodes{$name} = $node;
-            }
-
-            default {
-                $name = $spec.substr(1, *- 1);
-                $node = "[$name]";
-                $name = "T:{ $name }";
-            }
+        if $spec ~~ / '<' .*? '>' / {
+            $name = $spec.substr(1, *- 1);
+            $node = "([$name])";
+            $name = "NT:{ $name }";
+            %!nodes{$name} = $node;
+        } else {
+            $name = $spec.substr(1, *- 1);
+            $node = "[$name]";
+            $name = "T:{ $name }";
         }
 
         %!nodes{$name} = $node;
@@ -54,30 +40,22 @@ class EBNF::Actions::MermaidJS::Graph
     }
 
     method rule($/) {
-        my $lhs = self.make-mmd-node("<{$<lhs>.made}>");
-        my @terminals = |(-> $x { my $/; $x.match( / ['\'' | '\"'] .*? ['\'' | '\"'] / ):g; $/ }($<rhs>.made));
-        my @nonTerminals = |(-> $x { my $/; $x.match( / '<' .*? '>' / ):g; $/ }($<rhs>.made));
+        my $lhs = self.make-mmd-node("<{ $<lhs>.made }>");
+        my @terminals = |(-> $x {
+            my $/;
+            $x.match(/ ['\'' | '\"'] .*? ['\'' | '\"'] /):g;
+            $/
+        }($<rhs>.made));
+        my @nonTerminals = |(-> $x {
+            my $/;
+            $x.match(/ '<' .*? '>' /):g;
+            $/
+        }($<rhs>.made));
 
         my @res;
-        @res.append( @terminals.map({ "$lhs --> {self.make-mmd-node($_.Str)}" }) );
-        @res.append( @nonTerminals.map({ "$lhs --> {self.make-mmd-node($_.Str)}" }) );
+        @res.append(@terminals.map({ "$lhs --> { self.make-mmd-node($_.Str) }" }));
+        @res.append(@nonTerminals.map({ "$lhs --> { self.make-mmd-node($_.Str) }" }));
 
         make @res;
     }
-
-#`[
-    method seq($/) {
-        my @b = $/.values>>.made;
-        my $op = self.make-mmd-node('seq');
-        @!rules.append(@b.map({ "$op --> {self.make-mmd-node($_.Str)}" }));
-        make $op;
-    }
-
-    method alternatives($/) {
-        my @b = $/.values>>.made;
-        my $op = self.make-mmd-node('alt');
-        @!rules.append(@b.map({ "$op --> {self.make-mmd-node($_.Str)}" }));
-        make $op;
-    }
-]
 }
