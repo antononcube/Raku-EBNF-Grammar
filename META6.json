@@ -13,6 +13,7 @@
   "provides": {
     "EBNF::Grammar": "lib/EBNF/Grammar.rakumod",
     "EBNF::Grammar::Standardish": "lib/EBNF/Grammar/Standardish.rakumod",
+    "EBNF::Actions::MermaidJS::Graph": "lib/EBNF/Actions/MermaidJS/Graph.rakumod",
     "EBNF::Actions::Raku::FunctionalParsers": "lib/EBNF/Actions/Raku/FunctionalParsers.rakumod",
     "EBNF::Actions::Raku::Grammar": "lib/EBNF/Actions/Raku/Grammar.rakumod",
     "EBNF::Actions::WL::FunctionalParsers": "lib/EBNF/Actions/WL/FunctionalParsers.rakumod"
