@@ -1,6 +1,7 @@
 use v6.d;
 
 use EBNF::Grammar::Standardish;
+use EBNF::Actions::MermaidJS::Graph;
 use EBNF::Actions::Raku::Grammar;
 use EBNF::Actions::Raku::FunctionalParsers;
 use EBNF::Actions::WL::FunctionalParsers;
@@ -96,6 +97,10 @@ our sub ebnf-interpret(Str:D $command,
 
         when $_ ~~ Str && $_.lc ∈ <raku::functionalparsers functionalparsers combinators> {
             EBNF::Actions::Raku::FunctionalParsers.new(:$name);
+        }
+
+        when $_ ~~ Str && $_.lc ∈ <mermaid mermaid-js mermaid.js> {
+            EBNF::Actions::MermaidJS::Graph.new(:$name);
         }
 
         when $_ ~~ Str {
