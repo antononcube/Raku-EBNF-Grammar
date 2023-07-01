@@ -16,7 +16,7 @@ role EBNF::Grammar::Standardish {
     regex term { <parens> | <option> | <repetition> | <terminal> | <non-terminal> }
     token quantifier { '?' | '*' | '+' }
     regex factor { <term> <.WS> <quantifier> | <term> <.WS> }
-    token seq-sep { ',' }
+    token seq-sep { ',' | '<&' | '&>' }
     regex sequence { <.WS> <factor>+ % [ <.WS> <.seq-sep> <.WS> ] <.WS> }
     regex apply-sep { '<@' }
     regex func-spec { <.alnum>+ | '${' <-[\v]>+ '}' }
