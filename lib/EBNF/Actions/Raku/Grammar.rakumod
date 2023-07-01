@@ -23,6 +23,14 @@ class EBNF::Actions::Raku::Grammar {
         make $/.values>>.made.join(' ');
     }
 
+    method func-spec($/) {
+        make $/.Str;
+    }
+
+    method apply($/) {
+        make "{$<sequence>.made}\nmake \{{$<func-spec>.made}\}";
+    }
+
     method alternatives($/) {
         make $/.values>>.made.join(' | ');
     }

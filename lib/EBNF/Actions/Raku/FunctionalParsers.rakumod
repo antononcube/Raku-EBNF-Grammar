@@ -32,6 +32,14 @@ class EBNF::Actions::Raku::FunctionalParsers {
         make $/.values.elems == 1 ?? $/.values[0].made !! "sequence({$/.values>>.made.join(', ')})";
     }
 
+    method func-spec($/) {
+        make $/.Str;
+    }
+
+    method apply($/) {
+        make "apply({$<func-spec>.made}, {$<sequence>.made})";
+    }
+
     method alternatives($/) {
         make $/.values.elems == 1 ?? $/.values[0].made !! "alternatives({$/.values>>.made.join(', ')})";
     }

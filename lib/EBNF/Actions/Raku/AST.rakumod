@@ -19,16 +19,24 @@ class EBNF::Actions::Raku::AST {
     method sequence($/) {
         my $res = $/.values>>.made;
         if $res ~~ Positional && $res.elems > 1 {
-            make Pair.new('EBNFSequence', $res)
+            make Pair.new('EBNFSequence', $res);
         } else {
             make $res.head;
         }
     }
 
+    method func-spec($/) {
+        make $/.Str;
+    }
+
+    method apply($/) {
+        make Pair.new('EBNFApply', ($<func-spec>.made, $<sequence>.made));
+    }
+
     method alternatives($/) {
         my $res = $/.values>>.made;
         if $res ~~ Positional && $res.elems > 1 {
-            make Pair.new('EBNFAlternatives', $res)
+            make Pair.new('EBNFAlternatives', $res);
         } else {
             make $res.head;
         }

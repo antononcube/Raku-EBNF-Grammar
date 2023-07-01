@@ -29,6 +29,14 @@ class EBNF::Actions::WL::FunctionalParsers {
         make $/.values.elems == 1 ?? $/.values[0].made !! "ParseSequentialComposition[{$/.values>>.made.join(', ')}]";
     }
 
+    method func-spec($/) {
+        make $/.Str;
+    }
+
+    method apply($/) {
+        make "ParseApply[{$<func-spec>.made}, {$<sequence>.made}]";
+    }
+
     method alternatives($/) {
         make $/.values.elems == 1 ?? $/.values[0].made !! "ParseAlternativeComposition[{$/.values>>.made.join(', ')}]";
     }
