@@ -5,7 +5,7 @@ role EBNF::Grammar::Standardish {
     regex digit { \d }
     regex symbol { "[" | "]" | '{' | '}' | '(' | ')' | '<' | '>' | '\'' | '"' | '=' | '|' | '.' | ',' | ';' | '-' | '+' | '*' | '?' | "\n" | "\t" | "\r" | "\f" | "\b" }
     regex character { . }
-    regex identifier { <.alpha> <.alnum>* }
+    regex identifier { <.alpha> [ '-' | <.alnum> ]* }
     regex WS { <ws> }
     regex terminal { '"' <-['"]>+ '"' | '\'' <-['"]>+ '\''  }
     regex non-terminal { '<' <identifier> '>' }
@@ -18,8 +18,11 @@ role EBNF::Grammar::Standardish {
     regex factor { <term> <.WS> <quantifier> | <term> <.WS> }
     token seq-sep { ',' }
     regex sequence { <.WS> <factor>+ % [ <.WS> <.seq-sep> <.WS> ] <.WS> }
+    regex apply-sep { '<@' }
+    regex func-spec { <.alnum>+ | '${' <-[\v]>+ '}' }
+    regex apply { <sequence> <.WS> <.apply-sep> <.WS> <func-spec>}
     token alt-sep { '|' }
-    regex alternatives { <.WS> <sequence>+ % [<.WS> <.alt-sep> <.WS> ] }
+    regex alternatives { <.WS> [ <sequence> | <apply> ]+ % [<.WS> <.alt-sep> <.WS> ] }
     regex rhs { <alternatives> }
     regex lhs { <non-terminal> }
     token assign-symbol { '=' | ':=' | '::=' }
