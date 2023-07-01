@@ -56,7 +56,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1687876259_093477 {
+# grammar EBNF_1688245620_5661962 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -136,18 +136,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# I ♥️ Perl
-# I hate Julia
-# We hate R
-# I love Julia
-# We 🤮 R
-# We really love R
-# I ♥️ Perl
-# We really love Julia
+# I really love Perl
+# We hate Julia
+# We ♥️ Python
+# I ♥️ Julia
+# We 🤮 Perl
+# We 🤮 Julia
+# We 🤮 Julia
+# I love Python
+# I ♥️ R
+# We really love Perl
 # I ♥️ WL
-# We love Python
-# We 🤮 WL
-# I hate Python
+# We ♥️ Julia
 ```
 
 ------
@@ -259,8 +259,9 @@ graph TD
 ## TODO
 
 - [ ] TODO Parsing of EBNF
+    - [X] DONE Parse apply function, `<@` 
     - [ ] TODO Sequence-pick-left, `<&`
-    - [ ] TODO Sequence-pick-right, `&>` 
+    - [ ] TODO Sequence-pick-right, `&>`
     - [ ] TODO "Named" tokens
         - [ ] `'_?StringQ'` or `'_String'`
         - [ ] `'_WordString'`, `'_LetterString'`, and `'_IdentifierString'`
@@ -270,6 +271,10 @@ graph TD
 - [ ] TODO Interpreters of EBNF
     - [ ] TODO Java
         - [ ] TODO ["funcj.parser"](https://github.com/typemeta/funcj/tree/master/parser)
+    - [ ] TODO Mermaid JS
+      - [X] DONE Simple
+      - [ ] TODO Proper
+        - Most likely, via "FunctionalParsers"
     - [ ] TODO Scala
         - [ ] TODO built-in
         - [ ] TODO [parsley](https://github.com/j-mie6/parsley)

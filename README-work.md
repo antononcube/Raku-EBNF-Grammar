@@ -198,8 +198,9 @@ graph TD
 ## TODO
 
 - [ ] TODO Parsing of EBNF
+    - [X] DONE Parse apply function, `<@` 
     - [ ] TODO Sequence-pick-left, `<&`
-    - [ ] TODO Sequence-pick-right, `&>` 
+    - [ ] TODO Sequence-pick-right, `&>`
     - [ ] TODO "Named" tokens
         - [ ] `'_?StringQ'` or `'_String'`
         - [ ] `'_WordString'`, `'_LetterString'`, and `'_IdentifierString'`
@@ -209,6 +210,10 @@ graph TD
 - [ ] TODO Interpreters of EBNF
     - [ ] TODO Java
         - [ ] TODO ["funcj.parser"](https://github.com/typemeta/funcj/tree/master/parser)
+    - [ ] TODO Mermaid JS
+      - [X] DONE Simple
+      - [ ] TODO Proper
+        - Most likely, via "FunctionalParsers"
     - [ ] TODO Scala
         - [ ] TODO built-in
         - [ ] TODO [parsley](https://github.com/j-mie6/parsley)
