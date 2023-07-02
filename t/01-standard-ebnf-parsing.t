@@ -62,7 +62,7 @@ my grammar Test8 {
 
 my $query8 = 'b1';
 my $pres8 = Test8.parse($query8, rule => 'b');
-my $gr8 = ebnf-interpret($ebnfCode5, name => 'MyTest8'):eval;
+my $gr8 = ebnf-interpret($ebnfCode5, name => 'MyTest8', rule-type => 'regex'):eval;
 
 is-deeply $gr8.parse($query8, rule=>'b'), $pres8, 'equivalence, <b>';
 
