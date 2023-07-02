@@ -29,9 +29,12 @@ class EBNF::Actions::Raku::Grammar {
             my $left = $<factor>.made;
             my $right = $<sequence-any>.made;
             given $<seq-sep> {
-                when $_<seq-sep-right> && $<factor><term><non-terminal> { $left = $left.subst(/ ^ '<'/, '<.') }
-                when $_<seq-sep-left> && $<sequence-any><factor><term><non-terminal> { $right = $right.subst(/ ^ '<'/,
-                        '<.') }
+                when $_<seq-sep-right> && $<factor><term><non-terminal> {
+                    $left = $left.subst(/ ^ '<'/, '<.')
+                }
+                when $_<seq-sep-left> && $<sequence-any><factor><term><non-terminal> {
+                    $right = $right.subst(/ ^ '<'/, '<.')
+                }
             }
             make [$left, $right].join(' ');
         } else {
