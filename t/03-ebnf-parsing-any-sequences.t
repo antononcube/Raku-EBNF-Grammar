@@ -73,7 +73,7 @@ my $ebnfCode5 = "
 ";
 
 ## 5
-is-deeply ebnf-interpret($ebnfCode5, actions => 'Raku::Grammar', name => 'FP').subst(/ \s+ /, ' ', :g).trim,
+is-deeply ebnf-interpret($ebnfCode5, actions => 'Raku::Grammar', name => 'FP', rule-type => 'rule').subst(/ \s+ /, ' ', :g).trim,
         'grammar FP { rule top { <.a> <b> <c> } }',
         'Pick right and comma separated, Grammar';
 
@@ -87,7 +87,7 @@ my $ebnfCode6 = "
 
 ## 6
 is-deeply ebnf-interpret($ebnfCode6, actions => 'Raku::Grammar', name => 'FP').subst(/ \s+ /, ' ', :g).trim,
-        'grammar FP { rule top { <.a> <b> <c> <.d> } }',
+        'grammar FP { regex top { <.a> <b> <c> <.d> } }',
         'Pick right, comma separated, pick left, Grammar';
 
 
@@ -124,7 +124,7 @@ my $ebnfCode9 = "
 
 ## 9
 is-deeply ebnf-interpret($ebnfCode9, actions => 'Raku::Grammar', name => 'FP').subst(/ \s+ /, ' ', :g).trim,
-        'grammar FP { rule top { <.a> <b> <c> <.d> <.e> } }',
+        'grammar FP { regex top { <.a> <b> <c> <.d> <.e> } }',
         'Pick right, comma separated, pick left, pick left, Grammar';
 
 
