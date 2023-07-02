@@ -4,6 +4,14 @@ class EBNF::Actions::Raku::AST {
 
     has $.name is rw = 'MyEBNFGrammar';
 
+    method flatten-sequence($x) {
+        if $x ~~ Pair && $x.key.starts-with('EBNFSequence') {
+            return self.flatten-sequence($x.value[1]).prepend($x.value[0]);
+        } else {
+            return [$x,];
+        }
+    };
+
     method TOP($/) {
         make $/.values[0].made;
     }
@@ -17,13 +25,19 @@ class EBNF::Actions::Raku::AST {
     }
 
     method sequence($/) {
-        make $/.values[0].made;
+        my $res = $/.values[0].made;
+        if $res.Str.contains('EBNFSequencePickLeft') || $res.Str.contains('EBNFSequencePickRight') {
+            make $res;
+        } else {
+            my @res = self.flatten-sequence($res);
+            make Pair.new('EBNFSequence', @res.List);
+        }
     }
 
     method seq-sep($/) { make $/.values[0].made; }
     method seq-sep-comma($/) { make 'EBNFSequence'; }
     method seq-sep-left($/) { make 'EBNFSequencePickLeft'; }
-    method seq-sep-right($/) { make 'EBNFSequencePicRight'; }
+    method seq-sep-right($/) { make 'EBNFSequencePickRight'; }
 
     method sequence-any($/) {
         if $<seq-sep> {
