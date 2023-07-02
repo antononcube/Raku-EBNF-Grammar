@@ -17,6 +17,23 @@ class EBNF::Actions::Raku::AST {
     }
 
     method sequence($/) {
+        make $/.values[0].made;
+    }
+
+    method seq-sep($/) { make $/.values[0].made; }
+    method seq-sep-comma($/) { make 'EBNFSequence'; }
+    method seq-sep-left($/) { make 'EBNFSequencePickLeft'; }
+    method seq-sep-right($/) { make 'EBNFSequencePicRight'; }
+
+    method sequence-any($/) {
+        if $<seq-sep> {
+            make Pair.new($<seq-sep>.made, ($<factor>.made, $<sequence-any>.made));
+        } else {
+            make $<factor>.made;
+        }
+    }
+
+    method sequence-comma($/) {
         my $res = $/.values>>.made;
         if $res ~~ Positional && $res.elems > 1 {
             make Pair.new('EBNFSequence', $res);
@@ -24,6 +41,24 @@ class EBNF::Actions::Raku::AST {
             make $res.head;
         }
     }
+
+#    method sequence-left($/) {
+#        my $res = $/.values>>.made;
+#        if $res ~~ Positional && $res.elems > 1 {
+#            make Pair.new('EBNFSequencePickLeft', $res);
+#        } else {
+#            make $res.head;
+#        }
+#    }
+#
+#    method sequence-right($/) {
+#        my $res = $/.values>>.made;
+#        if $res ~~ Positional && $res.elems > 1 {
+#            make Pair.new('EBNFSequencePickRight', $res);
+#        } else {
+#            make $res.head;
+#        }
+#    }
 
     method func-spec($/) {
         make $/.Str;

@@ -29,7 +29,28 @@ class EBNF::Actions::Raku::FunctionalParsers {
     }
 
     method sequence($/) {
-        make $/.values.elems == 1 ?? $/.values[0].made !! "sequence({$/.values>>.made.join(', ')})";
+        make $/.values[0].made;
+    }
+
+    method seq-sep($/) { make $/.values[0].made; }
+    method seq-sep-comma($/) { make 'sequence'; }
+    method seq-sep-left($/) { make 'sequence-pick-left'; }
+    method seq-sep-right($/) { make 'sequence-pick-right'; }
+
+    method sequence-any($/) {
+        if $<seq-sep> {
+            make "{$<seq-sep>.made}({$<factor>.made}, {$<sequence-any>.made})";
+        } else {
+            make $<factor>.made;
+        }
+    }
+
+    method sequence-comma($/) {
+        if $/.values.elems == 1 {
+            make $/.values[0].made;
+        } else {
+            make "sequence({ $/.values>>.made.join(' , ') })";
+        }
     }
 
     method func-spec($/) {
