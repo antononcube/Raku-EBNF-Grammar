@@ -17,10 +17,11 @@ role EBNF::Grammar::Standardish {
     token quantifier { '?' | '*' | '+' }
     regex factor { <term> <.WS> <quantifier> | <term> <.WS> }
     token seq-sep-comma { ',' }
-    token seq-sep-left { '<&'  }
+    token seq-sep-left { '<&' }
     token seq-sep-right { '&>' }
     token seq-sep { <seq-sep-comma> || <seq-sep-left> || <seq-sep-right> }
-    regex sequence { <sequence-comma> | <sequence-any> }
+    # regex sequence { <sequence-comma> | <sequence-any> }  # This make the parsing too slow
+    regex sequence { <sequence-any> }
     regex sequence-any { <.WS> <factor> <.WS> <seq-sep> <.WS> <sequence-any> | <.WS> <factor> <.WS> }
     regex sequence-comma { <.WS> <factor>+ % [ <.WS> <.seq-sep-comma> <.WS> ] <.WS>  }
     regex apply-sep { '<@' }
