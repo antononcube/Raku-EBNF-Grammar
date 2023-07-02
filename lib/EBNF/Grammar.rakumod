@@ -77,7 +77,9 @@ our sub ebnf-interpret(Str:D $command,
                        :$actions is copy = Whatever,
                        :$name is copy = Whatever,
                        :$style = 'Standard',
-                       Bool :$eval = False) is export {
+                       Bool :$eval = False,
+                       *%args
+                       ) is export {
 
 
     # Process name
@@ -93,23 +95,23 @@ our sub ebnf-interpret(Str:D $command,
 
     $actions = do given $actions {
         when $_ ~~ Str && $_.lc ∈ <raku::ast ast> {
-            EBNF::Actions::Raku::AST.new(:$name);
+            EBNF::Actions::Raku::AST.new(:$name, |%args);
         }
 
         when $_ ~~ Str && $_.lc ∈ <raku raku::grammar grammar> {
-            EBNF::Actions::Raku::Grammar.new(:$name);
+            EBNF::Actions::Raku::Grammar.new(:$name, |%args);
         }
 
         when $_ ~~ Str && $_.lc ∈ <raku::functionalparsers functionalparsers combinators> {
-            EBNF::Actions::Raku::FunctionalParsers.new(:$name);
+            EBNF::Actions::Raku::FunctionalParsers.new(:$name, |%args);
         }
 
         when $_ ~~ Str && $_.lc ∈ <mermaid mermaid-js mermaid.js> {
-            EBNF::Actions::MermaidJS::Graph.new(:$name);
+            EBNF::Actions::MermaidJS::Graph.new(:$name, |%args);
         }
 
         when $_ ~~ Str {
-            ::("EBNF::Actions::{$actions}").new(:$name);
+            ::("EBNF::Actions::{$actions}").new(:$name, |%args);
         }
 
         default {
