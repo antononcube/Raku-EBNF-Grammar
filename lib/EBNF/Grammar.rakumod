@@ -145,6 +145,9 @@ multi sub ebnf-grammar-graph(Str $ebnf,
 
     my $res = ebnf-interpret($ebnf, :$style, actions => 'Raku::AST');
 
+    die "Cannot parse the given grammar."
+    unless $res ~~ Pair && *.key eq 'EBNF';
+
     return ebnf-grammar-graph($res, :$lang, |%args);
 }
 
