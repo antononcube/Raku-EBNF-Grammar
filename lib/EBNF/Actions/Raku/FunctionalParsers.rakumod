@@ -79,7 +79,7 @@ class EBNF::Actions::Raku::FunctionalParsers {
     }
 
     method parens($/) {
-        make $/.values[0].made;
+        make "({$/.values[0].made})";
     }
 
     method option($/) {

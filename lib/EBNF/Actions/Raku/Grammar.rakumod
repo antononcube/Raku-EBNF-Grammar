@@ -71,7 +71,7 @@ class EBNF::Actions::Raku::Grammar {
     }
 
     method parens($/) {
-        make $/.values[0].made;
+        make "[{$/.values[0].made}]";
     }
 
     method option($/) {
