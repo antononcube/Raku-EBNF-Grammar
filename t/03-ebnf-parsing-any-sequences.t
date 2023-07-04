@@ -17,7 +17,7 @@ my $ebnfCode1 = "
 
 ## 1
 is-deeply ebnf-interpret($ebnfCode1, actions => 'Raku::AST').Hash,
-        {:EBNF((:EBNFRule("<top>" => :EBNFSequence((:EBNFTerminal("'a'"), :EBNFTerminal("'b'"), :EBNFTerminal("'c'")))),))},
+        {:EBNF((:EBNFRule("<top>" => :EBNFSequence((:EBNFTerminal("\"a\""), :EBNFTerminal("\"b\""), :EBNFTerminal("\"c\"")))),))},
         'Comma separated';
 
 ##===========================================================
@@ -29,11 +29,11 @@ my $ebnfCode2 = "
 
 ## 2
 is-deeply ebnf-interpret($ebnfCode2, actions => 'Raku::AST').Hash,
-        ${:EBNF($(:EBNFRule("<top>" => :EBNFSequencePickLeft((:EBNFTerminal("'a'"), :EBNFSequencePickLeft((:EBNFTerminal("'b'"), :EBNFTerminal("'c'")))))),))},
+        ${:EBNF($(:EBNFRule("<top>" => :EBNFSequencePickLeft((:EBNFTerminal("\"a\""), :EBNFSequencePickLeft((:EBNFTerminal("\"b\""), :EBNFTerminal("\"c\"")))))),))},
         'Pick left separated';
 
 # In FunctionalParsers this is produced:
-# {:EBNF((:EBNFRule("<top>" => :EBNFSequencePickLeft(($(:EBNFTerminal("'a'"), :EBNFTerminal("'b'")), :EBNFTerminal("'c'")))),))},
+# {:EBNF((:EBNFRule("<top>" => :EBNFSequencePickLeft(($(:EBNFTerminal("\"a\""), :EBNFTerminal("\"b\"")), :EBNFTerminal("\"c\"")))),))},
 
 ##===========================================================
 ## 3
@@ -44,11 +44,11 @@ my $ebnfCode3 = "
 
 ## 3
 is-deeply ebnf-interpret($ebnfCode3, actions => 'Raku::AST').Hash,
-        ${:EBNF($(:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("'a'"), :EBNFSequencePickRight((:EBNFTerminal("'b'"), :EBNFTerminal("'c'")))))),))},
+        ${:EBNF($(:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("\"a\""), :EBNFSequencePickRight((:EBNFTerminal("\"b\""), :EBNFTerminal("\"c\"")))))),))},
         'Pick right separated';
 
 # In FunctionalParsers this is produced:
-# {:EBNF((:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("'a'"), $(:EBNFTerminal("'b'"), :EBNFTerminal("'c'"))))),))},
+# {:EBNF((:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("\"a\""), $(:EBNFTerminal("\"b\""), :EBNFTerminal("\"c\""))))),))},
 
 ##===========================================================
 ## 4
@@ -59,11 +59,11 @@ my $ebnfCode4 = "
 
 ## 4
 is-deeply ebnf-interpret($ebnfCode4, actions => 'Raku::AST').Hash,
-        ${:EBNF($(:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("'a'"), :EBNFSequence($(:EBNFTerminal("'b'"), :EBNFTerminal("'c'")))))),))},
+        ${:EBNF($(:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("\"a\""), :EBNFSequence($(:EBNFTerminal("\"b\""), :EBNFTerminal("\"c\"")))))),))},
         'Pick right and comma separated';
 
 # In FunctionalParsers this is produced:
-# {:EBNF((:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("'a'"), :EBNFSequence((:EBNFTerminal("'b'"), :EBNFTerminal("'c'")))))),))},
+# {:EBNF((:EBNFRule("<top>" => :EBNFSequencePickRight((:EBNFTerminal("\"a\""), :EBNFSequence((:EBNFTerminal("\"b\""), :EBNFTerminal("\"c\"")))))),))},
 
 ##===========================================================
 ## 5

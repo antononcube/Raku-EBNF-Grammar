@@ -99,12 +99,15 @@ is-deeply $gr12.parse($query12, rule=>'top'), $pres12, 'equivalence, <digit>';
 
 
 ##===========================================================
-## 18 - 23
+## 14
 ##===========================================================
-my $ebnfCode18 = q:to/END/;
-<top> = 'a' <& 'b' <& 'c' <& 'd' | <right> ;
-<right> = 'e' &> 'f' &> 'g' &> 'h' ;
-END
+my $ebnfCode14 = $ebnfCode9.subst(/\s+/,''):g;
+
+## 14
+is-deeply
+        ebnf-interpret($ebnfCode9, actions => 'Raku::AST'),
+        ebnf-interpret($ebnfCode14, actions => 'Raku::AST'),
+        'equivalence, no \s';
 
 
 done-testing;
