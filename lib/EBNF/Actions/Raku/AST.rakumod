@@ -3,6 +3,39 @@ use v6.d;
 class EBNF::Actions::Raku::AST {
 
     has $.name is rw = 'MyEBNFGrammar';
+    has $.normalize is rw = True;
+
+    #======================================================
+    # Helper methods
+    #======================================================
+
+    method to-quoted($s) {
+        given $s {
+            when $_ ~~ / ^ \" .* \" $ | ^ \' .+ \' $ / { $s }
+            default { "\"$s\"" }
+        }
+    }
+
+    method to-double-quoted($s) {
+        given $s {
+            when $_ ~~ / ^ \" .* \" $ / { $s }
+            when $_ ~~ / ^ \' .+ \' $ / { "\"{ $s.substr(1, *- 1) }\"" }
+            default { "\"$s\"" }
+        }
+    }
+
+    method to-single-quoted($s) {
+        given $s {
+            when $_ ~~ / ^ \' .* \' $ / { $s }
+            when $_ ~~ / ^ \" .+ \" $ / { "\"{ $s.substr(1, *- 1) }\"" }
+            default { "'$s'" }
+        }
+    }
+
+    method to-angle-bracketed($s) { $s ~~ / ^ '<' .* '>' $ / ?? $s !! "<$s>" }
+
+    #======================================================
+
 
     method flatten-sequence($x) {
         if $x ~~ Pair && $x.key.starts-with('EBNFSequence') {
@@ -128,10 +161,10 @@ class EBNF::Actions::Raku::AST {
     }
 
     method terminal($/) {
-        make Pair.new('EBNFTerminal', $/.Str);
+        make Pair.new('EBNFTerminal', $!normalize ?? self.to-double-quoted($/.Str) !! $/.Str);
     }
 
     method non-terminal($/) {
-        make Pair.new('EBNFNonTerminal', $/.Str);
+        make Pair.new('EBNFNonTerminal', $!normalize ?? self.to-angle-bracketed($/.Str) !! $/.Str);
     }
 }
