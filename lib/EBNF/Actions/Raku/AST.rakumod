@@ -126,7 +126,13 @@ class EBNF::Actions::Raku::AST {
 
     method factor($/) {
         if $<quantifier> {
-            make "[{ $<term>.made }]{ $<quantifier>.Str }";
+            if $<quantifier>.Str ∈ <+ *> {
+                make Pair.new('EBNFRepetition', $<term>.made)
+            } elsif $<quantifier>.Str eq '?' {
+                make Pair.new('EBNFOption', $<term>.made)
+            } else {
+                make $<term>.made;
+            }
         } else {
             make $<term>.made;
         }
