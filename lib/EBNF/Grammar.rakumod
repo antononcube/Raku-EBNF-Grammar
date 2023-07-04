@@ -6,6 +6,7 @@ use EBNF::Actions::Raku::AST;
 use EBNF::Actions::Raku::Grammar;
 use EBNF::Actions::Raku::FunctionalParsers;
 use EBNF::Actions::WL::FunctionalParsers;
+use FunctionalParsers::EBNF;
 
 #-----------------------------------------------------------
 grammar EBNF::Grammar
@@ -17,9 +18,9 @@ grammar EBNF::Grammar
 grammar EBNF::Grammar::Relaxed is export
         does EBNF::Grammar::Standardish {
 
-    token terminator { ";" | "." | \v* }
-    token assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
-    token seq-sep { ',' | \h* }
+    token terminator { ";" | "."  | <WS> }
+    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
+    token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
     regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
     regex non-terminal { '<' <identifier> '>' || <identifier> }
     regex TOP { <ebnf> }
@@ -29,9 +30,9 @@ grammar EBNF::Grammar::Relaxed is export
 grammar EBNF::Grammar::Inverted is export
                                does EBNF::Grammar::Standardish {
 
-    token terminator { ";" | "." | \v* }
-    token assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
-    token seq-sep { ',' | \h* }
+    token terminator { ";" | "."  | <WS> }
+    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
+    token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
     regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' || \w+ }
     regex non-terminal { '<' <identifier> '>' }
     regex TOP { <ebnf> }
@@ -44,9 +45,9 @@ my $msgStyle = "Do not know how to process the argument style." ~
 sub pick-parser(:$style!) {
 
     return do given $style {
-        when $_ ~~ Str && $_.lc ∈ <relaxed simpler>  { EBNF::Grammar::Relaxed; }
-        when $_ ~~ Str && $_.lc ∈ <inverted>         { EBNF::Grammar::Inverted; }
-        when $_ ~~ Str && $_.lc ∈ <default standard> { EBNF::Grammar; }
+        when $_ ~~ Str && $_.lc ∈ <relaxed simpler simple>  { EBNF::Grammar::Relaxed; }
+        when $_ ~~ Str && $_.lc ∈ <inverted>                { EBNF::Grammar::Inverted; }
+        when $_ ~~ Str && $_.lc ∈ <default standard>        { EBNF::Grammar; }
 
         default { die $msgStyle; }
     }
@@ -121,7 +122,7 @@ our sub ebnf-interpret(Str:D $command,
 
     # Parse / interpret
     my $p = pick-parser(:$style);
-    my $gr = $p.parse($command, :$rule, :$actions).made;
+    my $gr = $p.parse($command.chomp ~ "\n", :$rule, :$actions).made;
 
     # Evaluate if specified
     if $eval {
@@ -131,4 +132,39 @@ our sub ebnf-interpret(Str:D $command,
 
     # Result
     return $gr;
+}
+
+#-----------------------------------------------------------
+#| Make a graph for a given grammar.
+proto ebnf-grammar-graph($g, |) is export {*}
+
+multi sub ebnf-grammar-graph(Str $ebnf,
+                             :$style is copy = 'Standard',
+                             :actions(:$lang) = Whatever,
+                             *%args) {
+
+    my $res = ebnf-interpret($ebnf, :$style, actions => 'Raku::AST');
+
+    return ebnf-grammar-graph($res, :$lang, |%args);
+}
+
+multi sub ebnf-grammar-graph(Pair $ebnfAST where *.key eq 'EBNF',
+                             :actions(:$lang) is copy = Whatever,
+                             *%args) {
+
+    if $lang.isa(Whatever) { $lang = 'MermaidJS'; }
+
+    die "The value of the argument $lang is expected to be MeramidJS, WL, or Whatever."
+    unless $lang ~~ Str && $lang.lc ∈ <mermaid mermaid-js mermaidjs wl mathematica>;
+
+    $lang = do given $lang.lc {
+        when $_  ∈ <mermaid mermaid-js mermaidjs> { 'MermaidJS' }
+        when $_  ∈ <wl mathematica> { 'WL' }
+    }
+
+    my $mname = "FunctionalParsers::EBNF::Actions::{$lang}::Graph";
+    require ::($mname);
+    my $tracer = ::($mname).new(|%args);
+
+    return $tracer.trace($ebnfAST);
 }
