@@ -30,7 +30,7 @@ class EBNF::Actions::Raku::AST {
             make $res;
         } else {
             my @res = self.flatten-sequence($res);
-            make Pair.new('EBNFSequence', @res.List);
+            make @res.elems > 1 ?? Pair.new('EBNFSequence', @res.List) !! @res[0];
         }
     }
 
@@ -108,11 +108,11 @@ class EBNF::Actions::Raku::AST {
     }
 
     method option($/) {
-        make Pair.new('EBNFOption', $/.made);
+        make Pair.new('EBNFOption', $/.values[0].made);
     }
 
     method repetition($/) {
-        make Pair.new('EBNFRepetition', $/.made);
+        make Pair.new('EBNFRepetition', $/.values[0].made);
     }
 
     method rhs($/) {
