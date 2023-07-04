@@ -178,19 +178,30 @@ graph TD
     EBNF>EBNF]
     RakuGrammar>"Raku grammar"]
     FPClass>"Functional parsers class<br/>(grammar)"]
-    FPs[[FunctionalParsers]]
+    FPs[[FunctionalParsers::EBNF]]
+    FPsEBNFMmdGraph[[FunctionalParsers::EBNF::Actions::MermaidJS::Graph]]
+    FPsEBNFWLGraph[[FunctionalParsers::EBNF::Actions::WL::Graph]]
     EBNFGram[[EBNF::Grammar]]
     GT[[Grammar::TokenProcessing]]
     RS>Random sentences]
+    RakuAST>Raku AST]
+    MmdGraph>Mermaid JS<br>graph]
+    WLGraph>Mathematica/WL<br>graph]
     EBNF --> FPs 
     EBNF --> EBNFGram
-    EBNFGram --> FPClass
-    FPs --> FPClass
-    EBNFGram --> RakuGrammar
-    FPs --> RakuGrammar
+    EBNFGram --> |ebnf-interpret|FPClass
+    EBNFGram --> |ebnf-grammar-graph|RakuAST
+    FPs --> |fp-ebnf-parse|FPClass
+    GT --> |random-sentence-generation|RS
+    FPClass --> |fp-random-sentence|RS
+    FPs --> |fp-ebnf-parse|RakuAST
+    RakuAST --> |fp-grammar-graph|FPsEBNFMmdGraph
+    FPsEBNFMmdGraph --> MmdGraph
+    RakuAST --> |fp-grammar-graph|FPsEBNFWLGraph
+    FPsEBNFWLGraph --> WLGraph
+    EBNFGram --> |ebnf-interpret|RakuGrammar
+    FPs --> |fp-ebnf-interpret|RakuGrammar
     RakuGrammar --> GT
-    GT --> RS
-    FPs --> RS 
 ```
 
 ------
@@ -226,6 +237,8 @@ graph TD
     - [ ] TODO WL
         - [X] DONE FunctionalParsers, [AAp1, AAp2]
         - [ ] TODO GrammarRules
+- [X] DONE Implement grammar-graph translator
+  - Introduced dependency on ["FunctionalParsers"](https://github.com/antononcube/Raku-FunctionalParsers) 
 - [X] DONE CLI
 
 ------

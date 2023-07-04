@@ -56,7 +56,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1688245620_5661962 {
+# grammar EBNF_1688501832_2058194 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -121,7 +121,7 @@ ebnf-interpret($ebnfCode, name=>'LoveHateProgLang');
 grammar LoveHateProgLang {
 	regex statement { <who> <verb> <lang> }
 	regex who { 'I' | 'We' }
-	regex verb { 'really'? 'love' | 'hate' | '♥️'* | '🤮' }
+	regex verb { 'really'? ['love' | 'hate' | '♥️'* | '🤮'] }
 	regex lang { 'Julia' | 'Perl' | 'Python' | 'R' | 'WL' }
 }
 ```
@@ -136,18 +136,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# I really love Perl
-# We hate Julia
-# We ♥️ Python
-# I ♥️ Julia
-# We 🤮 Perl
-# We 🤮 Julia
-# We 🤮 Julia
-# I love Python
-# I ♥️ R
+# We really ♥️ Python
+# We really 🤮 Python
 # We really love Perl
-# I ♥️ WL
-# We ♥️ Julia
+# I really ♥️ Python
+# We really hate Julia
+# I love R
+# I hate WL
+# I really ♥️ Perl
+# I really love Perl
+# We really hate R
+# I ♥️ R
+# I ♥️ Python
 ```
 
 ------
@@ -239,19 +239,30 @@ graph TD
     EBNF>EBNF]
     RakuGrammar>"Raku grammar"]
     FPClass>"Functional parsers class<br/>(grammar)"]
-    FPs[[FunctionalParsers]]
+    FPs[[FunctionalParsers::EBNF]]
+    FPsEBNFMmdGraph[[FunctionalParsers::EBNF::Actions::MermaidJS::Graph]]
+    FPsEBNFWLGraph[[FunctionalParsers::EBNF::Actions::WL::Graph]]
     EBNFGram[[EBNF::Grammar]]
     GT[[Grammar::TokenProcessing]]
     RS>Random sentences]
+    RakuAST>Raku AST]
+    MmdGraph>Mermaid JS<br>graph]
+    WLGraph>Mathematica/WL<br>graph]
     EBNF --> FPs 
     EBNF --> EBNFGram
-    EBNFGram --> FPClass
-    FPs --> FPClass
-    EBNFGram --> RakuGrammar
-    FPs --> RakuGrammar
+    EBNFGram --> |ebnf-interpret|FPClass
+    EBNFGram --> |ebnf-grammar-graph|RakuAST
+    FPs --> |fp-ebnf-parse|FPClass
+    GT --> |random-sentence-generation|RS
+    FPClass --> |fp-random-sentence|RS
+    FPs --> |fp-ebnf-parse|RakuAST
+    RakuAST --> |fp-grammar-graph|FPsEBNFMmdGraph
+    FPsEBNFMmdGraph --> MmdGraph
+    RakuAST --> |fp-grammar-graph|FPsEBNFWLGraph
+    FPsEBNFWLGraph --> WLGraph
+    EBNFGram --> |ebnf-interpret|RakuGrammar
+    FPs --> |fp-ebnf-interpret|RakuGrammar
     RakuGrammar --> GT
-    GT --> RS
-    FPs --> RS 
 ```
 
 ------
@@ -287,6 +298,8 @@ graph TD
     - [ ] TODO WL
         - [X] DONE FunctionalParsers, [AAp1, AAp2]
         - [ ] TODO GrammarRules
+- [X] DONE Implement grammar-graph translator
+  - Introduced dependency on ["FunctionalParsers"](https://github.com/antononcube/Raku-FunctionalParsers) 
 - [X] DONE CLI
 
 ------
