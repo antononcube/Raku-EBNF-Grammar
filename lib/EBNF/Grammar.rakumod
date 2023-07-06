@@ -28,6 +28,18 @@ grammar EBNF::Grammar::Relaxed is export
 };
 
 #-----------------------------------------------------------
+grammar EBNF::Grammar::Simple is export
+                                does EBNF::Grammar::Standardish {
+
+    token terminator { ";" | "."  | <WS> }
+    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
+    token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
+    regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
+    regex non-terminal { <identifier> }
+    regex TOP { <ebnf> }
+};
+
+#-----------------------------------------------------------
 grammar EBNF::Grammar::Inverted is export
                                 does EBNF::Grammar::Standardish {
 
@@ -46,6 +58,7 @@ grammar EBNF::Grammar::Overall is export
                                 is EBNF::Grammar::Inverted {
     regex TOP {
         || <EBNF::Grammar::ebnf>
+        || <EBNF::Grammar::Simple::ebnf>
         || <EBNF::Grammar::Inverted::ebnf>
         || <EBNF::Grammar::Relaxed::ebnf>
     }
@@ -59,10 +72,11 @@ sub pick-parser(:$style!) {
 
     return do given $style {
         when $_.isa(Whatever)                               { EBNF::Grammar::Overall; }
-        when $_ ~~ Str && $_.lc ∈ <overall whatever>        { EBNF::Grammar::Overall; }
-        when $_ ~~ Str && $_.lc ∈ <relaxed simpler simple>  { EBNF::Grammar::Relaxed; }
-        when $_ ~~ Str && $_.lc ∈ <inverted>                { EBNF::Grammar::Inverted; }
         when $_ ~~ Str && $_.lc ∈ <default standard>        { EBNF::Grammar; }
+        when $_ ~~ Str && $_.lc ∈ <inverted>                { EBNF::Grammar::Inverted; }
+        when $_ ~~ Str && $_.lc ∈ <overall whatever>        { EBNF::Grammar::Overall; }
+        when $_ ~~ Str && $_.lc ∈ <relaxed simpler>         { EBNF::Grammar::Relaxed; }
+        when $_ ~~ Str && $_.lc ∈ <simple>                  { EBNF::Grammar::Simple; }
 
         default { die $msgStyle; }
     }
@@ -197,6 +211,9 @@ multi sub ebnf-random-sentence(Str $ebnf,
                                *%args) {
 
     my $res = ebnf-interpret($ebnf, :$style, actions => 'EBNF::Standard');
+
+    die "Cannot parser the given grammar."
+    unless $res ~~ Str;
 
     return fp-random-sentence($res, $n, |%args);
 }
