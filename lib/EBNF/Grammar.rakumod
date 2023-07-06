@@ -44,8 +44,6 @@ grammar EBNF::Grammar::Overall is export
                                 is EBNF::Grammar
                                 is EBNF::Grammar::Relaxed
                                 is EBNF::Grammar::Inverted {
-
-
     regex TOP {
         || <EBNF::Grammar::ebnf>
         || <EBNF::Grammar::Inverted::ebnf>
@@ -187,4 +185,20 @@ multi sub ebnf-grammar-graph(Pair $ebnfAST where *.key eq 'EBNF',
     my $tracer = ::($mname).new(|%args);
 
     return $tracer.trace($ebnfAST);
+}
+
+#-----------------------------------------------------------
+#| Generate sentences with a given grammar.
+proto ebnf-random-sentence($g, |) is export {*}
+
+multi sub ebnf-random-sentence(Str $ebnf,
+                               UInt $n = 1,
+                               :$style is copy = 'Standard',
+                               *%args) {
+
+    my $res = ebnf-interpret($ebnf, :$style, actions => 'EBNF::Standard');
+
+    note $res;
+
+    return fp-random-sentence($res, $n, |%args);
 }
