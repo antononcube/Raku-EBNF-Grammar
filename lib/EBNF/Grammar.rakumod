@@ -1,6 +1,7 @@
 use v6.d;
 
 use EBNF::Grammar::Standardish;
+use EBNF::Actions::EBNF::Standard;
 use EBNF::Actions::MermaidJS::Graph;
 use EBNF::Actions::Raku::AST;
 use EBNF::Actions::Raku::Grammar;
@@ -22,7 +23,7 @@ grammar EBNF::Grammar::Relaxed is export
     regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
     regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
-    regex non-terminal { '<' <identifier> '>' || <identifier> }
+    regex non-terminal { '<' [ <identifier> | <identifier-phrase> ] '>' || <identifier> }
     regex TOP { <ebnf> }
 };
 
@@ -34,7 +35,7 @@ grammar EBNF::Grammar::Inverted is export
     regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
     regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' || \w+ }
-    regex non-terminal { '<' <identifier> '>' }
+    regex non-terminal { '<' [ <identifier> | <identifier-phrase> ] '>' }
     regex TOP { <ebnf> }
 };
 
@@ -47,8 +48,8 @@ grammar EBNF::Grammar::Overall is export
 
     regex TOP {
         || <EBNF::Grammar::ebnf>
-        || <EBNF::Grammar::Relaxed::ebnf>
         || <EBNF::Grammar::Inverted::ebnf>
+        || <EBNF::Grammar::Relaxed::ebnf>
     }
 };
 
