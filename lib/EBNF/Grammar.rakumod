@@ -198,7 +198,5 @@ multi sub ebnf-random-sentence(Str $ebnf,
 
     my $res = ebnf-interpret($ebnf, :$style, actions => 'EBNF::Standard');
 
-    note $res;
-
     return fp-random-sentence($res, $n, |%args);
 }
