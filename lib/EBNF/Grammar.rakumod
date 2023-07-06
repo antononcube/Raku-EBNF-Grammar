@@ -16,10 +16,10 @@ grammar EBNF::Grammar
 
 #-----------------------------------------------------------
 grammar EBNF::Grammar::Relaxed is export
-        does EBNF::Grammar::Standardish {
+                               does EBNF::Grammar::Standardish {
 
     token terminator { ";" | "."  | <WS> }
-    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
+    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
     regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
     regex non-terminal { '<' <identifier> '>' || <identifier> }
@@ -28,14 +28,28 @@ grammar EBNF::Grammar::Relaxed is export
 
 #-----------------------------------------------------------
 grammar EBNF::Grammar::Inverted is export
-                               does EBNF::Grammar::Standardish {
+                                does EBNF::Grammar::Standardish {
 
     token terminator { ";" | "."  | <WS> }
-    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' }
+    regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
     regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' || \w+ }
     regex non-terminal { '<' <identifier> '>' }
     regex TOP { <ebnf> }
+};
+
+#-----------------------------------------------------------
+grammar EBNF::Grammar::Overall is export
+                                is EBNF::Grammar
+                                is EBNF::Grammar::Relaxed
+                                is EBNF::Grammar::Inverted {
+
+
+    regex TOP {
+        || <EBNF::Grammar::ebnf>
+        || <EBNF::Grammar::Relaxed::ebnf>
+        || <EBNF::Grammar::Inverted::ebnf>
+    }
 };
 
 #-----------------------------------------------------------
@@ -45,6 +59,8 @@ my $msgStyle = "Do not know how to process the argument style." ~
 sub pick-parser(:$style!) {
 
     return do given $style {
+        when $_.isa(Whatever)                               { EBNF::Grammar::Overall; }
+        when $_ ~~ Str && $_.lc ∈ <overall whatever>        { EBNF::Grammar::Overall; }
         when $_ ~~ Str && $_.lc ∈ <relaxed simpler simple>  { EBNF::Grammar::Relaxed; }
         when $_ ~~ Str && $_.lc ∈ <inverted>                { EBNF::Grammar::Inverted; }
         when $_ ~~ Str && $_.lc ∈ <default standard>        { EBNF::Grammar; }
