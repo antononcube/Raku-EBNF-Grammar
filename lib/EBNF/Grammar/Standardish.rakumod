@@ -5,10 +5,11 @@ role EBNF::Grammar::Standardish {
     regex digit { \d }
     regex symbol { "[" | "]" | '{' | '}' | '(' | ')' | '<' | '>' | '\'' | '"' | '=' | '|' | '.' | ',' | ';' | '-' | '+' | '*' | '?' | "\n" | "\t" | "\r" | "\f" | "\b" }
     regex character { . }
-    regex identifier { <.alpha> [ '-' | <.alnum> ]* }
+    regex identifier { <.alpha> [ <.alnum> | <:Pd> ]* }
+    regex identifier-phrase { <.alpha> [ <.alnum> | <:Pd> | \h ]* }
     regex WS { <ws> }
     regex terminal { '"' <-['"]>+ '"' | '\'' <-['"]>+ '\''  }
-    regex non-terminal { '<' <identifier> '>' }
+    regex non-terminal { '<' [ <identifier> | <identifier-phrase> ] '>' }
     token terminator { ";" | "." }
     regex parens { '(' <.WS> <rhs> <.WS> ')' }
     regex option { '[' <.WS> <rhs> <.WS> ']' }
