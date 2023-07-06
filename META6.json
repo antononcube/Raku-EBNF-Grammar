@@ -1,7 +1,7 @@
 {
   "name": "EBNF::Grammar",
   "description": "EBNF grammar and interpreters.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
