@@ -2,6 +2,7 @@ use v6.d;
 
 use EBNF::Grammar::Standardish;
 use EBNF::Actions::EBNF::Standard;
+use EBNF::Actions::JavaScript::Nearley;
 use EBNF::Actions::MermaidJS::Graph;
 use EBNF::Actions::Raku::AST;
 use EBNF::Actions::Raku::Grammar;
