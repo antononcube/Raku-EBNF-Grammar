@@ -1,14 +1,14 @@
 {
   "name": "EBNF::Grammar",
   "description": "EBNF grammar and interpreters.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
   ],
   "auth": "zef:antononcube",
   "depends": [
-    "FunctionalParsers"
+    "FunctionalParsers:ver<0.1.6+>:auth<zef:antononcube>:api<1>"
   ],
   "build-depends": [],
   "test-depends": [],
@@ -16,6 +16,7 @@
     "EBNF::Grammar": "lib/EBNF/Grammar.rakumod",
     "EBNF::Grammar::Standardish": "lib/EBNF/Grammar/Standardish.rakumod",
     "EBNF::Actions::EBNF::Standard": "lib/EBNF/Actions/EBNF/Standard.rakumod",
+    "EBNF::Actions::JavaScript::Nearley": "lib/EBNF/Actions/JavaScript/Nearley.rakumod",
     "EBNF::Actions::MermaidJS::Graph": "lib/EBNF/Actions/MermaidJS/Graph.rakumod",
     "EBNF::Actions::Raku::AST": "lib/EBNF/Actions/Raku/AST.rakumod",
     "EBNF::Actions::Raku::FunctionalParsers": "lib/EBNF/Actions/Raku/FunctionalParsers.rakumod",
