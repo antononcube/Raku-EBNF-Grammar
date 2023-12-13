@@ -168,9 +168,9 @@ because many languages have packages implementing FPs.
 - Cross-interfacing:
   - The package "Grammar::TokenProcessing" can translate Raku grammars into EBNFs.
   - Both "FunctionalParsers" and "EBNF::Grammar" can translate EBNFs into Raku grammars.
-  - "EBNF::Grammar" can generate parser classes with utilizing the FPs of "FunctionalParsers". 
+  - "EBNF::Grammar" can generate parser classes that are utilizing the FPs of "FunctionalParsers". 
   
-The following diagram summarizes relationships (and implied workflows) in the comparison table
+The following diagram summarizes the relationships (and implied workflows) in the comparison table
 and clarification points above:
 
 ```mermaid

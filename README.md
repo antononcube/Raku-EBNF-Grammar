@@ -56,7 +56,7 @@ END
 ebnf-interpret($ebnf);
 ```
 ```
-# grammar EBNF_1688501832_2058194 {
+# grammar EBNF_1702441429_8786073 {
 # 	regex digit { '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' }
 # 	regex integer { <digit> <digit>* }
 # 	regex TOP { <integer> }
@@ -136,18 +136,18 @@ my $gr = ebnf-interpret($ebnfCode, name=>'LoveHateProgLang'):eval;
 .say for random-sentence-generation($gr, '<statement>') xx 12;
 ```
 ```
-# We really ♥️ Python
-# We really 🤮 Python
 # We really love Perl
-# I really ♥️ Python
-# We really hate Julia
-# I love R
+# We hate Perl
+# I really hate R
+# We hate Python
+# I really 🤮 Python
+# I really ♥️ R
+# We really love Perl
 # I hate WL
-# I really ♥️ Perl
-# I really love Perl
-# We really hate R
-# I ♥️ R
-# I ♥️ Python
+# I hate Python
+# I really ♥️ WL
+# I love Julia
+# I love Julia
 ```
 
 ------
@@ -161,7 +161,7 @@ ebnf-parse --help
 ```
 ```
 # Usage:
-#   ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-s|--style=<Str>] -- Generates a parser code for a given EBNF grammar.
+#   /Users/antonov/.rakubrew/versions/moar-2023.11/share/perl6/site/bin/ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-s|--style=<Str>] -- Generates a parser code for a given EBNF grammar.
 #   
 #     <ebnf>                        EBNF text.
 #     -t|--target=<Str>             Target. [default: 'Raku::Grammar']
@@ -229,9 +229,9 @@ because many languages have packages implementing FPs.
 - Cross-interfacing:
   - The package "Grammar::TokenProcessing" can translate Raku grammars into EBNFs.
   - Both "FunctionalParsers" and "EBNF::Grammar" can translate EBNFs into Raku grammars.
-  - "EBNF::Grammar" can generate parser classes with utilizing the FPs of "FunctionalParsers". 
+  - "EBNF::Grammar" can generate parser classes that are utilizing the FPs of "FunctionalParsers". 
   
-The following diagram summarizes relationships (and implied workflows) in the comparison table
+The following diagram summarizes the relationships (and implied workflows) in the comparison table
 and clarification points above:
 
 ```mermaid
