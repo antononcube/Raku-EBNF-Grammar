@@ -1,8 +1,8 @@
 use v6.d;
 
-class EBNF::Actions::JavaScript::Nearly {
+class EBNF::Actions::JavaScript::Nearley {
 
-    has $.name is rw = 'MyFP';
+    has $.name is rw = 'MyEBNFClass';
     has Str $.prefix is rw  = 'p';
     has Str $.start is rw = 'top';
     has &.modifier is rw = {$_.uc};
@@ -15,17 +15,38 @@ class EBNF::Actions::JavaScript::Nearly {
     }
 
     method ebnf($/) {
-        my $res ~= $/.values>>.made.join("\n\n");
+        my $res = $/.values>>.made.join("\n\n");
         make $res;
     }
 
     method rule($/) {
         my $mname = $<lhs>.made.subst(/ ^ '{self.' /, '').subst(/'($_)}' $/, '');
-        make "{$mname} -> {$<rhs>.made}";
+        make "$mname -> {$<rhs>.made}";
     }
 
     method sequence($/) {
-        make $/.values.elems == 1 ?? $/.values[0].made !! $/.values>>.made.join(' ');
+        make $/.values[0].made;
+    }
+
+    method seq-sep($/) { make $/.values[0].made; }
+    method seq-sep-comma($/) { make ' '; }
+    method seq-sep-left($/) { make ' '; }
+    method seq-sep-right($/) { make ' '; }
+
+    method sequence-any($/) {
+        if $<seq-sep> {
+            make $<factor>.made ~ $<seq-sep>.made ~ $<sequence-any>.made;
+        } else {
+            make $<factor>.made;
+        }
+    }
+
+    method sequence-comma($/) {
+        if $/.values.elems == 1 {
+            make $/.values[0].made;
+        } else {
+            make $/.values>>.made.join(' ');
+        }
     }
 
     method func-spec($/) {
@@ -33,7 +54,7 @@ class EBNF::Actions::JavaScript::Nearly {
     }
 
     method apply($/) {
-        make $<sequence>.made ~ '{% ' ~ $<func-spec>.made ~ ' %}';
+        make $<func-spec>.made ~ '{% ' ~ $<sequence>.made ~ ' %}';
     }
 
     method alternatives($/) {
@@ -42,9 +63,9 @@ class EBNF::Actions::JavaScript::Nearly {
 
     method factor($/) {
         given $<quantifier> {
-            when '?' { make "$<term>.made:?"; }
-            when '+' { make "$<term>.made:+"; }
-            when '*' { make "null | $<term>.made:+"; }
+            when '?' { make "{ $<term>.made }:?"; }
+            when '+' { make "{ $<term>.made }:+"; }
+            when '*' { make "null | { $<term>.made }:+"; }
             default { make $<term>.made; }
         }
     }
@@ -54,7 +75,7 @@ class EBNF::Actions::JavaScript::Nearly {
     }
 
     method parens($/) {
-        make $/.values[0].made;
+        make "({$/.values[0].made})";
     }
 
     method option($/) {
@@ -80,10 +101,10 @@ class EBNF::Actions::JavaScript::Nearly {
     }
 
     method terminal($/) {
-        make '"' ~ $/.Str.subst('\'','"', :g) ~ '"';
+        make $/.Str;
     }
 
     method non-terminal($/) {
-        make "{self.prefix}" ~ self.modifier.($/.Str.subst(/\s/,'').subst(/^ '<'/,'').subst(/'>' $/,''));
+        make $/.Str.subst(/^ '<'/, '').subst(/'>' $/, '');
     }
 }
