@@ -23,7 +23,7 @@ grammar EBNF::Grammar::Relaxed is export
     token terminator { ";" | "."  | <WS> }
     regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
-    regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
+    regex terminal { '"' <-["]>+ '"' || '\'' <-[']>+ '\'' }
     regex non-terminal { '<' [ <identifier> | <identifier-phrase> ] '>' || <identifier> }
     regex TOP { <ebnf> }
 };
@@ -35,7 +35,7 @@ grammar EBNF::Grammar::Simple is export
     token terminator { ";" | "."  | <WS> }
     regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
-    regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' }
+    regex terminal { '"' <-["]>+ '"' || '\'' <-[']>+ '\'' }
     regex non-terminal { <identifier> }
     regex TOP { <ebnf> }
 };
@@ -47,7 +47,7 @@ grammar EBNF::Grammar::Inverted is export
     token terminator { ";" | "."  | <WS> }
     regex assign-symbol { '=' || '::=' || ':=' || ':' || '->' || '→' }
     token seq-sep-comma { <.WS> ',' <.WS> | <WS> }
-    regex terminal { '"' <-['"]>+ '"' || '\'' <-['"]>+ '\'' || \w+ }
+    regex terminal { '"' <-["]>+ '"' || '\'' <-[']>+ '\'' || \w+ }
     regex non-terminal { '<' [ <identifier> | <identifier-phrase> ] '>' }
     regex TOP { <ebnf> }
 };
