@@ -187,7 +187,7 @@ multi sub ebnf-grammar-graph(Pair $ebnfAST where *.key eq 'EBNF',
 
     if $lang.isa(Whatever) { $lang = 'MermaidJS'; }
 
-    die "The value of the argument $lang is expected to be MeramidJS, WL, or Whatever."
+    die "The value of the argument $lang is expected to be MermaidJS, WL, or Whatever."
     unless $lang ~~ Str && $lang.lc ∈ <mermaid mermaid-js mermaidjs wl mathematica>;
 
     $lang = do given $lang.lc {
@@ -213,7 +213,7 @@ multi sub ebnf-random-sentence(Str $ebnf,
 
     my $res = ebnf-interpret($ebnf, :$style, actions => 'EBNF::Standard');
 
-    die "Cannot parser the given grammar."
+    die "Cannot parse the given grammar."
     unless $res ~~ Str;
 
     return fp-random-sentence($res, $n, |%args);
