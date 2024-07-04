@@ -29,6 +29,27 @@ class EBNF::Actions::WL::FunctionalParsers {
         make $/.values.elems == 1 ?? $/.values[0].made !! "ParseSequentialComposition[{$/.values>>.made.join(', ')}]";
     }
 
+    method seq-sep($/) { make $/.values[0].made; }
+    method seq-sep-comma($/) { make 'ParseSequentialComposition'; }
+    method seq-sep-left($/) { make 'ParseSequentialCompositionPickLeft'; }
+    method seq-sep-right($/) { make 'ParseSequentialCompositionPickRight'; }
+
+    method sequence-any($/) {
+        if $<seq-sep> {
+            make "{$<seq-sep>.made}[{$<factor>.made}, {$<sequence-any>.made}]";
+        } else {
+            make $<factor>.made;
+        }
+    }
+
+    method sequence-comma($/) {
+        if $/.values.elems == 1 {
+            make $/.values[0].made;
+        } else {
+            make "ParseSequentialComposition[{ $/.values>>.made.join(' , ') }]";
+        }
+    }
+
     method func-spec($/) {
         make $/.Str;
     }
