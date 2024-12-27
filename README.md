@@ -161,7 +161,7 @@ ebnf-parse --help
 ```
 ```
 # Usage:
-#   /Users/antonov/.rakubrew/versions/moar-2023.11/share/perl6/site/bin/ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-s|--style=<Str>] -- Generates a parser code for a given EBNF grammar.
+#   ebnf-parse <ebnf> [-t|--target=<Str>] [--name|--parser-name=<Str>] [-s|--style=<Str>] -- Generates a parser code for a given EBNF grammar.
 #   
 #     <ebnf>                        EBNF text.
 #     -t|--target=<Str>             Target. [default: 'Raku::Grammar']
